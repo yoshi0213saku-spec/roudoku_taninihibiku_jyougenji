@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>谷にひびく ― 常源寺ものがたり</title>
+<title>谷にひびく　三の巻 ― 常源寺ものがたり</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
 <style>
@@ -32,10 +32,19 @@ button:focus-visible,a:focus-visible,label:focus-within{outline:3px solid var(--
 header.top{padding-block:4px 18px;display:grid;gap:12px}
 .cover{position:relative;margin:0 auto 4px;border-radius:14px;overflow:hidden;width:min(100%,calc(80vh * 9 / 16));aspect-ratio:9/16;background:#3b3550}
 .cover img{display:block;width:100%;height:100%;object-fit:cover}
+.cover-vol{position:absolute;left:6%;top:4%;font-family:var(--mincho);font-weight:700;font-size:clamp(15px,4.4vw,20px);letter-spacing:.25em;color:#fbf1e0;text-shadow:0 1px 8px rgba(0,0,0,.8);padding:4px 10px;border:1px solid rgba(251,241,224,.6);border-radius:4px;background:rgba(30,24,40,.25)}
 .cover-author{position:absolute;left:6%;bottom:4%;font-family:var(--mincho);font-size:clamp(14px,4vw,18px);letter-spacing:.2em;color:#fbf1e0;text-shadow:0 1px 8px rgba(0,0,0,.8)}
 .lead{color:var(--sub);margin:0;font-size:15px}
 .credit{font-size:13px;color:var(--sub);margin:0;padding:10px 12px;border-left:3px solid var(--moss);background:var(--paper);border-radius:0 8px 8px 0}
 .stats{font-size:13px;color:var(--sub);font-variant-numeric:tabular-nums}
+
+/* 巻の切りかえ */
+.vols{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.vols a{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:56px;padding:6px 4px;border:1px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ai);text-decoration:none;font-family:var(--mincho);font-weight:700;font-size:16px;line-height:1.3;text-align:center}
+.vols a small{font-family:var(--gothic);font-weight:500;font-size:11.5px;color:var(--sub)}
+.vols a[aria-current="page"]{background:var(--ai);border-color:var(--ai);color:var(--paper)}
+.vols a[aria-current="page"] small{color:var(--paper);opacity:.85}
+.next-vol{display:flex;justify-content:center;align-items:center;min-height:52px;margin:14px 0 0;border-radius:12px;background:var(--ai);color:var(--paper);font-weight:700;text-decoration:none;font-size:16px}
 
 .list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
 .item{display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:center;width:100%;text-align:left;
@@ -55,7 +64,7 @@ header.top{padding-block:4px 18px;display:grid;gap:12px}
 .reading h2{font-family:var(--mincho);font-size:30px;line-height:1.35;margin:4px 0 6px;text-wrap:balance}
 .reading .len{font-size:13px;color:var(--sub)}
 .actions{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 8px}
-.btn{border:1px solid var(--line);background:var(--paper);border-radius:10px;padding:10px 14px;font-weight:700;font-size:15px;display:inline-flex;gap:8px;align-items:center;min-height:46px}
+.btn{border:1px solid var(--line);background:var(--paper);border-radius:10px;padding:10px 14px;font-weight:700;font-size:15px;display:inline-flex;gap:8px;align-items:center;min-height:46px;color:inherit;text-decoration:none}
 .btn.primary{background:var(--ai);color:var(--paper);border-color:var(--ai)}
 .btn.danger{color:var(--warn)}
 .btn[disabled]{opacity:.45;cursor:default}
@@ -91,18 +100,21 @@ header.top{padding-block:4px 18px;display:grid;gap:12px}
 <body>
 <div class="wrap">
   <section id="home">
-    <a class="shelf-link" href="https://claude.ai/artifact/PkrTMShyAy8r1nC9KijuGx">‹ 朗読帖の本棚にもどる</a>
+    <a class="shelf-link" href="/roudoku_riaru_hondana/">‹ 朗読帖の本棚にもどる</a>
     <header class="top">
       <figure class="cover">
-        <img src="p00.jpg" alt="夕暮れの谷と、川を見下ろす段丘の上のお寺。題字「谷にひびく 常源寺ものがたり」">
+        <img src="../images/p03.jpg" alt="五色の布をつけた神楽鈴と、遠くのお寺。題字「第三話 鈴の音」">
+        <div class="cover-vol">三の巻</div>
         <figcaption class="cover-author">作　中島義健</figcaption>
       </figure>
-      <p class="lead">信州・南相木の谷にある常源寺にまつわる、鐘の音・産声・鈴の音の三つの朗読です。まず「はじめに」でお話を紹介し、第一話から順に続けて流れます。題名をタップすると本文が開きます。</p>
+      <nav class="vols" aria-label="谷にひびく 全三巻"><a href="../vol1/">一の巻<small>はじめに・第一話</small></a><a href="../vol2/">二の巻<small>第二話</small></a><a href="../vol3/" aria-current="page">三の巻<small>第三話</small></a></nav>
+      <p class="lead">「谷にひびく」全三巻の最後、三の巻です。殿さまの娘・千代さまのお話「鈴の音」をお届けします。題名をタップすると本文が開きます。</p>
       <p class="credit">この朗読は、常源寺の再建記念に発刊された冊子『名刹 常源寺』をもとにした創作です。場面や会話は、資料に残る言い伝えから思いえがいたものです。</p>
       <div class="stats" id="stats"></div>
     </header>
     <ul class="list" id="list"></ul>
-    <a class="shelf-link shelf-bottom" href="https://claude.ai/artifact/PkrTMShyAy8r1nC9KijuGx">‹ 朗読帖の本棚にもどる</a>
+    
+    <a class="shelf-link shelf-bottom" href="/roudoku_riaru_hondana/">‹ 朗読帖の本棚にもどる</a>
   </section>
 
   <section id="detail" hidden>
@@ -128,6 +140,7 @@ header.top{padding-block:4px 18px;display:grid;gap:12px}
       <div class="end-nav">
         <button class="btn" id="back2" type="button">‹ 目次にもどる</button>
         <button class="btn" id="next2" type="button" hidden></button>
+        <a class="btn primary" id="nextvol2" href="#" hidden></a>
       </div>
     </article>
   </section>
@@ -158,7 +171,9 @@ header.top{padding-block:4px 18px;display:grid;gap:12px}
 <audio id="audio" preload="metadata"></audio>
 
 <script>
-const WORKS=[{"id": "r00", "title": "はじめに", "season": "この朗読帖について", "intro": true, "img": "p00.jpg", "text": ["これから、「谷にひびく ― 常源寺ものがたり」をお届けします。", "信州の山あい、南相木（みなみあいき）の谷に、常源寺（じょうげんじ）というお寺があります。", "いまからおよそ四百七十年前、戦（いくさ）の絶えない時代に、この谷の殿さま、相木市兵衛さまが、亡くなった人びとの供養のために建てたお寺です。", "ここにお届けする三つのお話は、お寺の再建を記念して発刊された冊子『名刹 常源寺』をもとにつくりました。お話の中の場面や会話は、資料に残る言い伝えから思いえがいた創作です。", "第一話「鐘の音（ね）が消えるまで」。戦で息子を亡くした母と、谷の者を守るために戦をやめた殿さまが、はじめて鳴らされる鐘の音に耳をすませます。", "第二話「卯月八日の子（うづきようかのこ）」。お寺を開いた年老いた和尚さまが、夜泣きに困る若い母親に、墓の中で生まれた自分のことを語ります。", "第三話「鈴の音（すずのね）」。戦で夫を亡くした殿さまの娘・千代さまが、父から小さな鈴を受け取り、祈りの道を歩みはじめます。", "鐘の音、赤子の産声、そして鈴の音。", "遠い昔、この谷にひびいた音に、どうぞ、しばし耳をかたむけてください。"]}, {"id": "r01", "title": "鐘の音が消えるまで", "season": "第一話", "img": "p01.jpg", "text": ["第一話「鐘の音（ね）が消えるまで」が始まります。", "信州の山あい、南相木（みなみあいき）の谷に、秋の風が下りてくる季節でした。", "おふさは、川を見下ろす段丘の上に立って、新しいお寺の屋根を見上げていました。ついこのあいだまで、ただの草はらだったところです。いまは木の香りのする本堂が建ち、鐘楼には、まだ一度も鳴らされたことのない鐘が下がっています。", "「おふさ婆さま、寒くはないか」", "振り向くと、市兵衛さまが立っていました。この谷の殿さま、相木市兵衛さまです。戦（いくさ）に出れば泣く子もだまる、と噂される人ですが、おふさの前では、いつも少し照れたように笑うのでした。", "おふさの息子は、十年前の戦で帰らぬ人となりました。亡骸（なきがら）も戻らず、墓に納めたのは、息子が使っていた古い鎌一本だけです。", "「殿さま。なんで、お寺なんぞ建てなすった」", "おふさが聞くと、市兵衛さまは谷を見渡しました。", "「わしはな、婆さま。戦をやめたのだ。武田に頭を下げた。腰抜けと笑う者もおる。だが、これ以上、谷の者を死なせとうはなかった」", "風が、刈り取ったあとの田んぼを渡っていきます。", "「それでも、もう死んでしもうた者たちがおる。おまえの息子も、わしの家来も、その親も、その親の親もだ。その者たちが、迷わずに帰ってこられる場所がほしかった」", "おふさは、黙って鐘を見上げました。", "「この鐘はな」と市兵衛さまは言いました。「ひとつ打ったら、その響きがすっかり消えるまで、じっと待つのだそうだ。それから、また打つ。三度打つ」", "「なんで、待つんです」", "「急いで次を打てば、前の音を追い越してしまう。響きが山の向こうまで届いて、ちゃんと帰っていくのを、見送ってやるのだと、和尚さまが言うておった」", "その日の夕暮れ、谷じゅうの人が、段丘の上に集まりました。年寄りも、子どもも、畑から鍬（くわ）をかついだまま来た男たちもいました。", "和尚さまが撞木（しゅもく）の綱を握り、ひとつ、鐘を打ちました。", "ごうん――。", "低い音が谷の底を這（は）い、川をわたり、向かいの山にぶつかって、またゆっくりと戻ってきます。誰も口をききませんでした。音はだんだん細くなり、細くなり、やがて夕焼けのなかに溶けていきました。", "おふさは、その響きのなかに、息子の声を聞いた気がしました。「おっかあ、ただいま」と、畑から帰ってくるときの、あの少しかすれた声を。", "ふたつめの鐘が鳴りました。また、みんなで待ちました。", "みっつめの鐘が鳴りました。", "最後の響きが消えたとき、おふさの頬には涙がつたっていました。けれどそれは、十年のあいだ流してきた涙とは、どこか違う、あたたかいものでした。", "となりを見ると、市兵衛さまも目を閉じて、静かに手を合わせていました。", "＊", "それから、四百年あまりの時が流れました。", "お寺は、いくたびも風雪にさらされ、あるときは火事にも遭いました。それでも谷の人びとは、そのたびに力を合わせ、お寺を建てなおしてきました。", "いまも、川を見下ろす段丘の上には、常源寺（じょうげんじ）が立っています。", "そして鐘を鳴らすとき、人びとはやっぱり、響きがすっかり消えるのを待ってから、次を打つのです。", "遠い昔、この谷を戦から守ろうとした殿さまと、帰らぬ息子を待ちつづけた母と、名もない多くの人びとの思いを、そっと見送るように。", "ごうん――。", "今日も、谷に鐘の音が響いています。"]}, {"id": "r02", "title": "卯月八日の子", "season": "第二話", "img": "p02.jpg", "text": ["第二話「卯月八日の子（うづきようかのこ）」が始まります。", "天文十九年の春、南相木（みなみあいき）の谷に、年老いたお坊さまがやって来ました。", "背は小さく、腰も少し曲がっています。けれど目は、春の川のように澄んでいました。", "「よう来てくださった、和尚さま」", "相木市兵衛さまが、深く頭を下げました。谷に新しく開くお寺のために、関東一円に名を知られたこの和尚さまをお招きしたのです。和尚さまは、このとき七十を越えていました。", "数日たったある晩のこと。和尚さまの泊まる庵（いおり）の戸を、若い母親がたたきました。腕の中で、赤子が火のついたように泣いています。", "「和尚さま、すみません。この子が、夜になると泣きやまなくて……。わたし、もう、どうしてやったらいいのか」", "母親の目は、真っ赤でした。", "和尚さまは赤子を受け取ると、ゆっくりと揺らしながら言いました。", "「よう泣く子じゃ。元気な声じゃのう」", "それから囲炉裏（いろり）の火を見つめて、ぽつりと話しはじめました。", "「わしもな、泣いて生まれてきた子じゃった。ただし、生まれたのは墓の中じゃ」", "母親は、息をのみました。", "「わしの母は、わしをお腹に宿したまま亡くなったのだそうな。村の者たちは、泣く泣く母を葬った。ところがその晩、墓のほうから赤子の泣き声がする。父が急いで掘り起こしてみると、冷たくなった母のかたわらで、生まれたばかりの赤子が、乳を求めて泣いておった。それが、わしじゃ」", "炉の火が、ぱちりと鳴りました。", "「生まれた日は、卯月の八日。お釈迦さまのお誕生日じゃ。父は、この子は仏さまからの授かりものだと言うて、わしを大事に育て、十三の年に鎌倉のお寺へ預けた」", "「……お母さまのお顔も、知らずに」", "「知らん。けれどな」", "和尚さまは、腕の中の赤子を見下ろしました。赤子はいつのまにか泣きやんで、和尚さまの衣の端を、小さな手でにぎっています。", "「わしは思うのじゃ。母は、命が尽きたあとも、わしを産んでくれた。声も出せず、乳もやれず、それでも、この世へわしを送り出してくれた。それほどの思いに守られて、わしはこの年まで生きてきた」", "和尚さまは、赤子をそっと母親の腕に返しました。", "「おまえさまは今、どうしたらいいかわからんと泣いておる。それでよい。わからんまま、抱いておればよい。その腕のぬくもりは、この子が忘れても、この子の命が覚えておる」", "母親の目から、涙がぽろぽろとこぼれました。腕の中で、赤子がすうすうと寝息を立てはじめました。", "その年、谷にお寺が開かれました。", "和尚さまはそれからも長く生き、九十六歳で亡くなったと伝えられています。", "毎年、卯月の八日が来ると、弟子たちは「和尚さまのお誕生日でございますね」とお祝いを言いました。", "すると和尚さまは、決まって笑って、こう答えたそうです。", "「いいや。今日は、わしの母が、いちばんがんばった日じゃ」"]}, {"id": "r03", "title": "鈴の音", "season": "第三話", "img": "p03.jpg", "text": ["第三話「鈴の音（すずのね）」が始まります。", "永禄四年の秋。", "相木の谷の館に、ひとりの若い女の人が帰ってきました。市兵衛さまのひとり娘、千代さまです。", "千代さまは、望月のお城の殿さまに嫁いでいました。けれどこの秋、川中島の戦で、その夫が討ち死にしたのです。", "館の縁側で、千代さまは何日も、ただ黙って山を見ていました。泣くこともできず、食べることもできずに。", "ある夕暮れ、市兵衛さまがとなりに腰をおろしました。手には、小さな包みを持っています。", "「千代。おまえが小さいころ、これを振って遊んでおったのを覚えておるか」", "包みの中から出てきたのは、古い鈴でした。お宮の祭りで、巫女さまが舞うときに鳴らす鈴です。", "「……覚えております。お祭りの日に、わたし、巫女さまのまねをして」", "「そうじゃ。おまえは、いつまでも鈴を離さなんだ」", "市兵衛さまは笑い、それから、ふっと遠くを見ました。", "「わしはな、千代。戦場で、たくさんの者を見送ってきた。味方も、敵もじゃ。敵にも、帰りを待つ母がおり、妻がおる。そう思うと、勝ち戦の夜でも、眠れんことがあった」", "千代さまは、はじめて父の顔をまっすぐに見ました。いつも強く、大きく見えた父の横顔に、深いしわが刻まれていました。", "「だから、わしは寺を建てた。けれど、寺を建てても、まだ足りん気がしておる。死んだ者のために祈る者が、もっともっと要るのじゃ」", "父は鈴を、千代さまの手のひらにのせました。", "「おまえの悲しみは、おまえだけのものじゃ。誰にも代わってはやれん。けれど、その悲しみを知っておるおまえだからこそ、届く祈りがあるかもしれん」", "千代さまは、鈴を握りしめました。冷たかった鈴が、手のなかで少しずつ、あたたかくなっていきました。", "その冬、千代さまは巫女になりました。やがて多くの巫女たちをたばねる巫女頭（みこがしら）となり、戦で命を落とした人びとのために、舞い、祈りつづけたと伝えられています。", "シャン、シャン、と鈴が鳴るたび、千代さまは心のなかで呼びかけました。", "（あなた。どうか、迷わずに）", "そして、名も知らぬ敵方の兵にも、同じように。", "（あなたも、どうか迷わずに。帰りを待つ人のところへ）", "春になって、千代さまは一度だけ、相木の谷に帰ってきました。父の建てたお寺の前で、千代さまは鈴を鳴らし、ゆっくりと舞いました。", "谷の人びとは手を止めて、その姿を見つめました。鈴の音は川をわたり、山へのぼり、空へと溶けていきました。", "本堂の前で、市兵衛さまは目を閉じていました。その頬がかすかにぬれているのを、千代さまだけが知っていました。"]}];
+const WORKS=[{"id": "v3", "no": "序", "title": "この巻について", "season": "三の巻のはじめに", "intro": true, "img": "../images/p03.jpg", "text": ["「谷にひびく ― 常源寺ものがたり」、最後の三の巻をお届けします。", "一の巻では鐘の音を、二の巻では赤子の産声をお届けしました。", "この巻でお届けするのは、殿さまのひとり娘、千代さまのお話です。川中島の戦で夫を亡くした千代さまが、父から小さな鈴を受け取り、祈りの道を歩みはじめます。", "お話は、冊子『名刹 常源寺』をもとにした創作です。", "谷にひびく最後の音に、どうぞ、耳をかたむけてください。"]}, {"id": "r03", "no": "三", "title": "鈴の音", "season": "第三話", "img": "../images/p03.jpg", "text": ["第三話「鈴の音（すずのね）」が始まります。", "永禄四年の秋。", "相木の谷の館に、ひとりの若い女の人が帰ってきました。市兵衛さまのひとり娘、千代さまです。", "千代さまは、望月のお城の殿さまに嫁いでいました。けれどこの秋、川中島の戦で、その夫が討ち死にしたのです。", "館の縁側で、千代さまは何日も、ただ黙って山を見ていました。泣くこともできず、食べることもできずに。", "ある夕暮れ、市兵衛さまがとなりに腰をおろしました。手には、小さな包みを持っています。", "「千代。おまえが小さいころ、これを振って遊んでおったのを覚えておるか」", "包みの中から出てきたのは、古い鈴でした。お宮の祭りで、巫女さまが舞うときに鳴らす鈴です。", "「……覚えております。お祭りの日に、わたし、巫女さまのまねをして」", "「そうじゃ。おまえは、いつまでも鈴を離さなんだ」", "市兵衛さまは笑い、それから、ふっと遠くを見ました。", "「わしはな、千代。戦場で、たくさんの者を見送ってきた。味方も、敵もじゃ。敵にも、帰りを待つ母がおり、妻がおる。そう思うと、勝ち戦の夜でも、眠れんことがあった」", "千代さまは、はじめて父の顔をまっすぐに見ました。いつも強く、大きく見えた父の横顔に、深いしわが刻まれていました。", "「だから、わしは寺を建てた。けれど、寺を建てても、まだ足りん気がしておる。死んだ者のために祈る者が、もっともっと要るのじゃ」", "父は鈴を、千代さまの手のひらにのせました。", "「おまえの悲しみは、おまえだけのものじゃ。誰にも代わってはやれん。けれど、その悲しみを知っておるおまえだからこそ、届く祈りがあるかもしれん」", "千代さまは、鈴を握りしめました。冷たかった鈴が、手のなかで少しずつ、あたたかくなっていきました。", "その冬、千代さまは巫女になりました。やがて多くの巫女たちをたばねる巫女頭（みこがしら）となり、戦で命を落とした人びとのために、舞い、祈りつづけたと伝えられています。", "シャン、シャン、と鈴が鳴るたび、千代さまは心のなかで呼びかけました。", "（あなた。どうか、迷わずに）", "そして、名も知らぬ敵方の兵にも、同じように。", "（あなたも、どうか迷わずに。帰りを待つ人のところへ）", "春になって、千代さまは一度だけ、相木の谷に帰ってきました。父の建てたお寺の前で、千代さまは鈴を鳴らし、ゆっくりと舞いました。", "谷の人びとは手を止めて、その姿を見つめました。鈴の音は川をわたり、山へのぼり、空へと溶けていきました。", "本堂の前で、市兵衛さまは目を閉じていました。その頬がかすかにぬれているのを、千代さまだけが知っていました。"]}];
+/* 次の巻（最後の巻では null） */
+const NEXTVOL=null;
 
 const $=id=>document.getElementById(id);
 const audio=$("audio");
@@ -176,24 +191,25 @@ const idbGet=k=>idbOp("readonly",s=>s.get(k));
 const idbPut=(k,v)=>idbOp("readwrite",s=>s.put(v,k));
 const idbDel=k=>idbOp("readwrite",s=>s.delete(k));
 
-/* 音声：ページと同じ場所の audio/r00.mp3〜r03.mp3 を優先。なければ端末に入れたMP3 */
+/* 音声：リポジトリの audio フォルダ（../audio/r01.mp3 など）を優先。なければ端末に入れたMP3 */
 async function probe(w){
-  try{const r=await fetch(w.id+".mp3",{method:"HEAD"});if(r.ok){state.urls[w.id]=w.id+".mp3";state.src[w.id]="page";return;}}catch(e){}
+  for(const u of ["../audio/"+w.id+".mp3","audio/"+w.id+".mp3","../audio/"+w.id+".mp3.mp3"]){
+    try{const r=await fetch(u,{method:"HEAD",cache:"no-store"});if(r.ok){state.urls[w.id]=u;state.src[w.id]="page";return;}}catch(e){}
+  }
   try{const b=await idbGet(w.id);if(b){state.urls[w.id]=URL.createObjectURL(b);state.src[w.id]="device";}}catch(e){}
 }
 
 function minutes(w){return Math.max(1,Math.round(w.text.join("").length/280));}
 function fmt(t){if(!isFinite(t))return"0:00";t=Math.floor(t);return Math.floor(t/60)+":"+String(t%60).padStart(2,"0");}
 function toast(msg){const t=$("toast");t.textContent=msg;t.hidden=false;clearTimeout(toast.h);toast.h=setTimeout(()=>t.hidden=true,2600);}
-const KAN=["一","二","三","四","五"];
 
 function renderList(){
   const ul=$("list");ul.textContent="";
-  WORKS.forEach((w,i)=>{
+  WORKS.forEach(w=>{
     const li=document.createElement("li");
     const b=document.createElement("button");b.type="button";b.className="item"+(state.cur===w.id&&!audio.paused?" playing":"");
     b.innerHTML='<span class="no"></span><span style="min-width:0"><span class="t"></span><span class="meta"><span class="s"></span><span class="m"></span></span></span><span class="chip"></span>';
-    b.querySelector(".no").textContent=w.intro?"序":KAN[i-1];
+    b.querySelector(".no").textContent=w.no;
     b.querySelector(".t").textContent=w.title;
     b.querySelector(".s").textContent=w.season;
     b.querySelector(".m").textContent="約"+minutes(w)+"分";
@@ -223,7 +239,10 @@ function renderDetail(){
     :has?"この音声はこの端末だけに保存されています。"
     :"スマートフォンに入っているMP3を選ぶと、この端末で聞けるようになります。";
   document.documentElement.style.setProperty("--fs",state.fs+"px");
-  const i=WORKS.findIndex(x=>x.id===state.view),nx=WORKS[i+1];$("next2").hidden=!nx;if(nx)$("next2").textContent="次へ　"+nx.title+" ›";
+  const i=WORKS.findIndex(x=>x.id===state.view),nx=WORKS[i+1];
+  $("next2").hidden=!nx;if(nx)$("next2").textContent="次へ　"+nx.title+" ›";
+  const nv=$("nextvol2");nv.hidden=!!nx||!NEXTVOL;
+  if(!nx&&NEXTVOL){nv.href=NEXTVOL.href;nv.textContent="次の巻へ　"+NEXTVOL.label+" ›";}
 }
 
 function route(){
@@ -248,7 +267,8 @@ function step(dir){
   if(!state.cur){const f=WORKS.find(w=>state.urls[w.id]);if(f)load(f.id,true);else toast("音声が入っている朗読がありません");return;}
   let i=WORKS.findIndex(w=>w.id===state.cur);
   for(let k=0;k<WORKS.length;k++){i+=dir;if(i<0||i>=WORKS.length)break;if(state.urls[WORKS[i].id]){load(WORKS[i].id,true);if(state.view)location.hash=WORKS[i].id;return;}}
-  toast(dir>0?"これが最後の朗読です":"これが最初の朗読です");
+  if(dir>0)toast(NEXTVOL?"この巻はここまでです。続きは「"+NEXTVOL.label+"」へ":"これで全三巻の朗読はおしまいです");
+  else toast("これがこの巻の最初の朗読です");
 }
 const PLAY='<path d="M8 5v14l11-7z"/>',PAUSE='<path d="M6 5h4v14H6zM14 5h4v14h-4z"/>';
 function sync(){
