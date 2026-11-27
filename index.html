@@ -1,432 +1,267 @@
 <!DOCTYPE html>
-<html lang="ja"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>谷にひびく ― 常源寺ものがたり</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
 <style>
-:root{
-  --bg:#efece8; --paper:#f9f7f4; --ink:#2a2430; --sub:#665d6b; --line:#d9d2cf;
-  --ai:#5a3f63; --ai-soft:#ebe0ec; --moss:#9a5a3e; --warn:#9a3b2c;
-  --mincho:"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho",serif;
-  --gothic:"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",system-ui,sans-serif;
-  color-scheme:light;
-}
-@media (prefers-color-scheme:dark){:root{
-  --bg:#17141b; --paper:#211c26; --ink:#ece6ee; --sub:#a99fae; --line:#352d3c;
-  --ai:#c9a8d6; --ai-soft:#3a2d44; --moss:#e0a07e; --warn:#e08a78; color-scheme:dark}}
-*{box-sizing:border-box}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--gothic);font-size:16px;line-height:1.7;
-  padding-top:env(safe-area-inset-top,0px);
-  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
-  padding-bottom:calc(200px + env(safe-area-inset-bottom,0px))}
-[hidden]{display:none!important}
-img{max-width:100%}
-.wrap{max-width:640px;margin:0 auto}
-button{font:inherit;color:inherit;cursor:pointer}
-button:focus-visible,a:focus-visible,label:focus-within{outline:3px solid var(--ai);outline-offset:2px}
-
-.shelf-link{display:inline-flex;align-items:center;gap:6px;color:var(--ai);font-weight:700;font-size:15px;text-decoration:none;padding:10px 0;min-height:44px}
-.shelf-bottom{display:flex;justify-content:center;margin:22px 0 8px;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--paper)}
-header.top{padding-block:4px 18px;display:grid;gap:12px}
-.cover{position:relative;margin:0 auto 4px;border-radius:14px;overflow:hidden;width:min(100%,calc(80vh * 9 / 16));aspect-ratio:9/16;background:#3b3550}
-.cover img{display:block;width:100%;height:100%;object-fit:cover}
-.cover-vol{position:absolute;left:6%;top:4%;font-family:var(--mincho);font-weight:700;font-size:clamp(15px,4.4vw,20px);letter-spacing:.25em;color:#fbf1e0;text-shadow:0 1px 8px rgba(0,0,0,.8);padding:4px 10px;border:1px solid rgba(251,241,224,.6);border-radius:4px;background:rgba(30,24,40,.25)}
-.cover-author{position:absolute;left:6%;bottom:4%;font-family:var(--mincho);font-size:clamp(14px,4vw,18px);letter-spacing:.2em;color:#fbf1e0;text-shadow:0 1px 8px rgba(0,0,0,.8)}
-.lead{color:var(--sub);margin:0;font-size:15px}
-.credit{font-size:13px;color:var(--sub);margin:0;padding:10px 12px;border-left:3px solid var(--moss);background:var(--paper);border-radius:0 8px 8px 0}
-.stats{font-size:13px;color:var(--sub);font-variant-numeric:tabular-nums}
-
-/* 巻の切りかえ */
-.vols{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.vols a{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:56px;padding:6px 4px;border:1px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ai);text-decoration:none;font-family:var(--mincho);font-weight:700;font-size:16px;line-height:1.3;text-align:center}
-.vols a small{font-family:var(--gothic);font-weight:500;font-size:11.5px;color:var(--sub)}
-.vols a[aria-current="page"]{background:var(--ai);border-color:var(--ai);color:var(--paper)}
-.vols a[aria-current="page"] small{color:var(--paper);opacity:.85}
-.next-vol{display:flex;justify-content:center;align-items:center;min-height:52px;margin:14px 0 0;border-radius:12px;background:var(--ai);color:var(--paper);font-weight:700;text-decoration:none;font-size:16px}
-
-.list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
-.item{display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:center;width:100%;text-align:left;
-  background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:14px}
-.item .no{font-family:var(--mincho);font-size:22px;color:var(--ai);text-align:center}
-.item .t{font-family:var(--mincho);font-size:19px;font-weight:700;line-height:1.35;display:block}
-.item .meta{font-size:12.5px;color:var(--sub);display:flex;gap:8px;flex-wrap:wrap;margin-top:2px}
-.chip{font-size:11.5px;padding:2px 8px;border-radius:99px;border:1px solid var(--line);white-space:nowrap}
-.chip.on{background:var(--ai-soft);border-color:transparent;color:var(--ai);font-weight:700}
-.item.playing{border-color:var(--ai);box-shadow:inset 4px 0 0 var(--ai)}
-
-.back{background:none;border:0;padding:16px 0 4px;color:var(--ai);font-weight:700;display:inline-flex;gap:6px;align-items:center;min-height:44px}
-.d-cover{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;border-radius:14px;overflow:hidden;background:var(--bg);box-shadow:0 6px 14px -10px rgba(0,0,0,.45)}
-.d-cover img{display:block;width:100%;height:100%;object-fit:cover;object-position:80% 45%}
-.reading{padding-block:8px 24px}
-.reading .season{font-size:13px;color:var(--moss);letter-spacing:.15em;font-weight:700}
-.reading h2{font-family:var(--mincho);font-size:30px;line-height:1.35;margin:4px 0 6px;text-wrap:balance}
-.reading .len{font-size:13px;color:var(--sub)}
-.actions{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 8px}
-.btn{border:1px solid var(--line);background:var(--paper);border-radius:10px;padding:10px 14px;font-weight:700;font-size:15px;display:inline-flex;gap:8px;align-items:center;min-height:46px;color:inherit;text-decoration:none}
-.btn.primary{background:var(--ai);color:var(--paper);border-color:var(--ai)}
-.btn.danger{color:var(--warn)}
-.btn[disabled]{opacity:.45;cursor:default}
-.note{font-size:13px;color:var(--sub);margin:4px 0 0}
-.confirm{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:14px;margin-top:8px}
-.body{font-family:var(--mincho);font-size:var(--fs,19px);line-height:2.05;margin-top:22px;max-width:34em}
-.body p{margin:0 0 1.1em;text-indent:1em}
-.body p:first-child{text-indent:0;margin-bottom:1.6em;color:var(--sub)}
-.body p.dlg{text-indent:0}
-.body p.sep{text-align:center;text-indent:0;letter-spacing:1em;color:var(--sub);margin:1.6em 0}
-.sizer{display:flex;gap:6px;align-items:center;font-size:13px;color:var(--sub);margin-top:14px}
-.sizer button{border:1px solid var(--line);background:var(--paper);border-radius:8px;width:40px;height:36px;font-weight:700}
-.end-nav{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;margin:8px 0 24px;padding-top:18px;border-top:1px solid var(--line)}
-.end-nav .btn{flex:1 1 auto;justify-content:center}
-
-.player{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--paper);border-top:1px solid var(--line);
-  padding:10px max(16px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
-.player .in{max-width:640px;margin:0 auto;display:grid;gap:6px}
-.p-head{display:flex;align-items:center;gap:8px}
-.p-title{flex:1;min-width:0;font-family:var(--mincho);font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.p-row{display:flex;align-items:center;gap:8px}
-.p-row input[type=range]{flex:1;min-width:0;accent-color:var(--ai);height:28px}
-.time{font-size:12px;color:var(--sub);font-variant-numeric:tabular-nums;white-space:nowrap}
-.ctrl{display:flex;align-items:center;justify-content:space-between;gap:4px}
-.ic{background:none;border:0;width:40px;height:44px;padding:0;border-radius:50%;display:grid;place-items:center}
-.ic svg{width:24px;height:24px;fill:currentColor}
-.ic.big{width:56px;height:56px;background:var(--ai);color:var(--paper)}
-.ic.big svg{width:28px;height:28px}
-.rate{border:1px solid var(--line);background:none;border-radius:8px;padding:6px;font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap;min-width:52px}
-.rate[aria-pressed="true"]{background:var(--ai-soft);color:var(--ai);border-color:transparent}
-.body .s{border-radius:4px;transition:background-color .3s,box-shadow .3s}
-.body.sync .s{cursor:pointer}
-.body .s.now{background:var(--ai-soft);box-shadow:0 0 0 3px var(--ai-soft);-webkit-box-decoration-break:clone;box-decoration-break:clone}
-.p-now{font-family:var(--mincho);font-size:14px;line-height:1.5;color:var(--ink);background:var(--ai-soft);border:0;border-radius:8px;padding:6px 10px;text-align:left;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;width:100%}
-.sizer .follow{width:auto;padding:0 10px}
-.sizer .follow[aria-pressed="true"]{background:var(--ai-soft);color:var(--ai);border-color:transparent}
-.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(200px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:14px;z-index:30;max-width:calc(100% - 32px)}
-</style></head>
+  :root{
+    --bg:#191522; --ink:#efe8f0; --sub:#b9a9bf;
+    --gold:#e0a96a; --line:#3d3247; --card:#241d2d;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; color:var(--ink);
+    background:
+      repeating-linear-gradient(90deg, rgba(255,255,255,.012) 0 2px, transparent 2px 9px),
+      linear-gradient(180deg,#221b2d,#120e17);
+    font-family:"Hiragino Mincho ProN","Yu Mincho","YuMincho","Noto Serif JP","MS PMincho",serif;
+    line-height:1.9; -webkit-text-size-adjust:100%; min-height:100vh;
+  }
+  .wrap{max-width:680px; margin:0 auto; padding:18px 18px 170px}
+  .back{
+    display:inline-block; font-size:16px; color:var(--ink); text-decoration:none;
+    border:1px solid var(--line); border-radius:30px; padding:8px 20px; background:rgba(0,0,0,.35);
+  }
+  /* 本の表紙 */
+  .book{position:relative; width:min(62vw,300px); aspect-ratio:9/16; margin:26px auto 8px}
+  .book .edge{position:absolute; top:2%; left:-3.5%; width:5%; height:96%;
+    background:repeating-linear-gradient(90deg,#d8cfbd 0 1px,#a99f8c 1px 2px); border-radius:3px 0 0 3px;
+    box-shadow:-2px 4px 10px rgba(0,0,0,.5)}
+  .book .cover{position:absolute; inset:0; border-radius:6px 3px 3px 6px; overflow:hidden; background:#3b3550;
+    box-shadow:0 14px 30px rgba(0,0,0,.6), 0 2px 4px rgba(0,0,0,.6)}
+  .book .cover img{position:absolute; inset:0; width:100%; height:100%; display:block; object-fit:cover}
+  .book .author{position:absolute; left:8%; bottom:4%; color:#fbf1e0; font-weight:700;
+    font-size:min(4.2vw,19px); letter-spacing:.2em; text-shadow:0 1px 8px rgba(0,0,0,.8)}
+  .series{text-align:center; color:var(--gold); font-weight:700; letter-spacing:.3em; margin-top:26px; font-size:17px}
+  h1{text-align:center; font-size:min(7vw,32px); margin:4px 0 0; letter-spacing:.08em; font-weight:700; white-space:nowrap}
+  .subtitle{text-align:center; color:var(--sub); font-size:17px; letter-spacing:.08em}
+  .desc{font-size:17px; margin:18px 0 22px; line-height:2}
+  .playall{
+    display:block; width:100%; margin:0 0 24px; padding:16px; font-size:18px; font-family:inherit; font-weight:700;
+    background:linear-gradient(180deg,#ebb978,#cf8f4c); color:#2a1d10; border:none; border-radius:40px; letter-spacing:.12em;
+    box-shadow:0 4px 14px rgba(0,0,0,.4);
+  }
+  .list{list-style:none; margin:0 0 26px; padding:0}
+  .list li{
+    background:var(--card); border:1px solid var(--line); border-radius:10px;
+    margin-bottom:10px; padding:12px 14px; display:flex; align-items:center; gap:12px; cursor:pointer;
+  }
+  .list li.now{border-color:var(--gold)}
+  .list .no{font-size:14px; color:var(--gold); min-width:56px}
+  .list .ttl{flex:1; font-size:17px}
+  .list .mark{font-size:13px; color:var(--gold); visibility:hidden}
+  .list li.now .mark{visibility:visible}
+  article{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:22px 20px; margin-bottom:20px; scroll-margin-top:12px; overflow:hidden}
+  .epimg{display:block; width:calc(100% + 40px); max-width:none; margin:-22px -20px 16px; aspect-ratio:16/10; object-fit:cover}
+  article h2{font-size:20px; margin:0 0 12px; font-weight:600}
+  article p{margin:0 0 1em; font-size:17px; text-indent:1em; line-height:2.2}
+  article p.q{text-indent:0}
+  article p.sep{text-align:center; text-indent:0; letter-spacing:1em; color:var(--sub)}
+  article rt{font-size:.55em; color:var(--sub)}
+  article.now{border-color:var(--gold)}
+  .readbtn{
+    font-family:inherit; font-size:15px; padding:6px 16px; border-radius:18px;
+    border:1px solid var(--gold); background:transparent; color:var(--gold); margin-bottom:12px;
+  }
+  footer{font-size:13px; color:var(--sub); text-align:center; margin-top:28px; line-height:1.9}
+  footer .back{margin-top:16px}
+  .player{
+    position:fixed; left:0; right:0; bottom:0; background:rgba(20,15,26,.96);
+    border-top:1px solid var(--line); padding:10px 14px calc(10px + env(safe-area-inset-bottom));
+  }
+  .player .in{max-width:680px; margin:0 auto}
+  .player .head{display:flex; align-items:center; gap:8px; margin-bottom:6px}
+  .player .now-ttl{flex:1; min-width:0; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--ink)}
+  .player .ctrl{display:flex; align-items:center; gap:10px}
+  .player button{
+    font-family:inherit; font-size:18px; width:46px; height:40px; border-radius:8px;
+    border:1px solid var(--line); background:var(--card); color:var(--ink);
+  }
+  .player button.main{background:var(--gold); color:#2a120a; border:none; width:58px}
+  .player button.sm{width:auto; height:32px; padding:0 10px; font-size:13px; white-space:nowrap}
+  .player button.sm[aria-pressed="true"]{border-color:var(--gold); color:var(--gold)}
+  .player input[type=range]{flex:1; min-width:0; accent-color:var(--gold)}
+  .player .time{font-size:12px; color:var(--sub); min-width:76px; text-align:right}
+  .player .msg{font-size:12px; color:var(--gold); min-height:1em}
+</style>
+</head>
 <body>
 <div class="wrap">
-  <section id="home">
-    <a class="shelf-link" href="/roudoku_riaru_hondana/">‹ 朗読帖の本棚にもどる</a>
-    <header class="top">
-      <figure class="cover">
-        <img src="p00.jpg" alt="夕暮れの谷と、川を見下ろす段丘の上のお寺。題字「谷にひびく 常源寺ものがたり」" onerror="if(!this.dataset.f){this.dataset.f=1;this.src=this.src.replace(/\/([^\/]+)$/,'/images/$1')}">
-        
-        <figcaption class="cover-author">作　中島義健</figcaption>
-      </figure>
-      
-      <p class="lead">信州・南相木の谷にある常源寺にまつわる、鐘の音・産声・鈴の音の三つの朗読です。まず「はじめに」でお話を紹介し、第一話から第三話まで続けて流れます。題名をタップすると本文が開きます。</p>
-      <p class="credit">この朗読は、常源寺の再建記念に発刊された冊子『名刹 常源寺』をもとにした創作です。場面や会話は、資料に残る言い伝えから思いえがいたものです。</p>
-      <div class="stats" id="stats"></div>
-    </header>
-    <ul class="list" id="list"></ul>
-    
-    <a class="shelf-link shelf-bottom" href="/roudoku_riaru_hondana/">‹ 朗読帖の本棚にもどる</a>
-  </section>
+  <a class="back" href="/roudoku_riaru_hondana/">‹ 本棚にもどす</a>
 
-  <section id="detail" hidden>
-    <button class="back" id="back" type="button">‹ 目次にもどる</button>
-    <div class="d-cover" id="d-cover"><img id="d-img" alt="" onerror="if(!this.dataset.f){this.dataset.f=1;this.src=this.src.replace(/\/([^\/]+)$/,'/images/$1')}"></div>
-    <article class="reading">
-      <div class="season" id="d-season"></div>
-      <h2 id="d-title"></h2>
-      <div class="len" id="d-len"></div>
-      <div class="actions">
-        <button class="btn primary" id="d-play" type="button"></button>
-        <label class="btn" id="d-pick-wrap"><input id="d-pick" type="file" accept="audio/*,.mp3" hidden><span id="d-pick-label">MP3を入れる</span></label>
-        <button class="btn danger" id="d-del" type="button" hidden>音声を外す</button>
-      </div>
-      <div class="confirm" id="d-confirm" hidden>この端末から音声を外しますか？
-        <button class="btn danger" id="d-del-yes" type="button">外す</button>
-        <button class="btn" id="d-del-no" type="button">やめる</button></div>
-      <p class="note" id="d-note"></p>
-      <div class="sizer">文字の大きさ
-        <button type="button" id="fs-down" aria-label="文字を小さく">小</button>
-        <button type="button" id="fs-up" aria-label="文字を大きく">大</button>
-        <button type="button" id="follow" class="follow" aria-pressed="true">読んでいる所を追う</button></div>
-      <p class="note" id="d-sync-note" hidden>色のついた文が、いま読んでいるところです（おおよその位置）。文をタップすると、そこから聞けます。</p>
-      <div class="body" id="d-body"></div>
-      <div class="end-nav">
-        <button class="btn" id="back2" type="button">‹ 目次にもどる</button>
-        <button class="btn" id="next2" type="button" hidden></button>
-        <a class="btn primary" id="nextvol2" href="#" hidden></a>
-      </div>
-    </article>
-  </section>
+  <div class="book" aria-label="谷にひびく　常源寺ものがたりの表紙">
+    <div class="edge"></div>
+    <div class="cover"><img src="p00.jpg" alt="夕暮れの谷と、川を見下ろす段丘の上のお寺。題字「谷にひびく 常源寺ものがたり」" onerror="if(!this.dataset.f){this.dataset.f=1;this.src='images/p00.jpg'}"><div class="author">作　中島義健</div></div>
+  </div>
+
+  <div class="series">朗読帖　第六冊</div>
+  <h1>谷にひびく</h1>
+  <div class="subtitle">常源寺ものがたり</div>
+
+  <p class="desc">信州・南相木の谷にある常源寺にまつわる、鐘の音・産声・鈴の音の三つの朗読です。「はじめに」でお話を紹介し、第一話から第三話まで続けて流れます。</p>
+
+  <button class="playall" id="playall">▶ 本をひらいて　読む・聞く</button>
+
+  <ul class="list" id="list"></ul>
+
+  <div id="texts"></div>
+
+  <footer>
+    この朗読は、常源寺の再建記念に発刊された冊子『名刹 常源寺』をもとにした創作です。<br>
+    場面や会話は、資料に残る言い伝えから思いえがいたものです。<br>
+    <a class="back" href="/roudoku_riaru_hondana/">‹ 本棚にもどす</a>
+  </footer>
 </div>
 
-<div class="player" id="player">
+<div class="player">
   <div class="in">
-    <div class="p-head">
-      <div class="p-title" id="p-title">再生する朗読を選んでください</div>
-      <button class="rate" id="sleep" type="button" aria-label="おやすみタイマー">☾ タイマー</button>
+    <div class="head">
+      <div class="now-ttl" id="nowttl">「本をひらいて　読む・聞く」で続けて聞けます</div>
+      <button class="sm" id="sleep" aria-label="おやすみタイマー" aria-pressed="false">☾ タイマー</button>
+      <button class="sm" id="cont" aria-label="続けて再生" aria-pressed="true">連続</button>
     </div>
-    <button class="p-now" id="p-now" type="button" hidden aria-label="読んでいるところの本文を開く"></button>
-    <div class="p-row">
+    <div class="ctrl">
+      <button id="prev" aria-label="前の話">⏮</button>
+      <button id="play" class="main" aria-label="再生">▶</button>
+      <button id="next" aria-label="次の話">⏭</button>
       <input type="range" id="seek" min="0" max="100" value="0" step="0.1" aria-label="再生位置">
       <span class="time" id="time">0:00 / 0:00</span>
     </div>
-    <div class="ctrl">
-      <button class="rate" id="rate" type="button" aria-label="再生速度">1.0倍</button>
-      <button class="ic" id="prev" type="button" aria-label="前の朗読"><svg viewBox="0 0 24 24"><path d="M6 5h2v14H6zM20 5v14L9 12z"/></svg></button>
-      <button class="ic" id="rew" type="button" aria-label="15秒もどる"><svg viewBox="0 0 24 24"><path d="M12 5V2L7 6l5 4V7a6 6 0 1 1-6 6H4a8 8 0 1 0 8-8z"/></svg></button>
-      <button class="ic big" id="pp" type="button" aria-label="再生"><svg viewBox="0 0 24 24" id="pp-ic"><path d="M8 5v14l11-7z"/></svg></button>
-      <button class="ic" id="fwd" type="button" aria-label="15秒すすむ"><svg viewBox="0 0 24 24"><path d="M12 5V2l5 4-5 4V7a6 6 0 1 0 6 6h2a8 8 0 1 1-8-8z"/></svg></button>
-      <button class="ic" id="next" type="button" aria-label="次の朗読"><svg viewBox="0 0 24 24"><path d="M16 5h2v14h-2zM4 5v14l11-7z"/></svg></button>
-      <button class="rate" id="cont" type="button" aria-label="続けて再生" aria-pressed="true">連続</button>
-    </div>
+    <div class="msg" id="msg"></div>
   </div>
 </div>
-<div class="toast" id="toast" hidden></div>
+
 <audio id="audio" preload="metadata"></audio>
 
 <script>
-const WORKS=[{"id": "r00", "no": "序", "title": "はじめに", "season": "この朗読帖について", "intro": true, "img": "p00.jpg", "text": ["これから、「谷にひびく ― 常源寺ものがたり」をお届けします。", "信州の山あい、南相木（みなみあいき）の谷に、常源寺（じょうげんじ）というお寺があります。", "いまからおよそ四百七十年前、戦（いくさ）の絶えない時代に、この谷の殿さま、相木市兵衛さまが、亡くなった人びとの供養のために建てたお寺です。", "ここにお届けする三つのお話は、お寺の再建を記念して発刊された冊子『名刹 常源寺』をもとにつくりました。お話の中の場面や会話は、資料に残る言い伝えから思いえがいた創作です。", "第一話「鐘の音（ね）が消えるまで」。戦で息子を亡くした母と、谷の者を守るために戦をやめた殿さまが、はじめて鳴らされる鐘の音に耳をすませます。", "第二話「卯月八日の子（うづきようかのこ）」。お寺を開いた年老いた和尚さまが、夜泣きに困る若い母親に、墓の中で生まれた自分のことを語ります。", "第三話「鈴の音（すずのね）」。戦で夫を亡くした殿さまの娘・千代さまが、父から小さな鈴を受け取り、祈りの道を歩みはじめます。", "鐘の音、赤子の産声、そして鈴の音。", "遠い昔、この谷にひびいた音に、どうぞ、しばし耳をかたむけてください。"]}, {"id": "r01", "no": "一", "title": "鐘の音が消えるまで", "season": "第一話", "img": "p01.jpg", "text": ["第一話「鐘の音（ね）が消えるまで」が始まります。", "信州の山あい、南相木（みなみあいき）の谷に、秋の風が下りてくる季節でした。", "おふさは、川を見下ろす段丘の上に立って、新しいお寺の屋根を見上げていました。ついこのあいだまで、ただの草はらだったところです。いまは木の香りのする本堂が建ち、鐘楼には、まだ一度も鳴らされたことのない鐘が下がっています。", "「おふさ婆さま、寒くはないか」", "振り向くと、市兵衛さまが立っていました。この谷の殿さま、相木市兵衛さまです。戦（いくさ）に出れば泣く子もだまる、と噂される人ですが、おふさの前では、いつも少し照れたように笑うのでした。", "おふさの息子は、十年前の戦で帰らぬ人となりました。亡骸（なきがら）も戻らず、墓に納めたのは、息子が使っていた古い鎌一本だけです。", "「殿さま。なんで、お寺なんぞ建てなすった」", "おふさが聞くと、市兵衛さまは谷を見渡しました。", "「わしはな、婆さま。戦をやめたのだ。武田に頭を下げた。腰抜けと笑う者もおる。だが、これ以上、谷の者を死なせとうはなかった」", "風が、刈り取ったあとの田んぼを渡っていきます。", "「それでも、もう死んでしもうた者たちがおる。おまえの息子も、わしの家来も、その親も、その親の親もだ。その者たちが、迷わずに帰ってこられる場所がほしかった」", "おふさは、黙って鐘を見上げました。", "「この鐘はな」と市兵衛さまは言いました。「ひとつ打ったら、その響きがすっかり消えるまで、じっと待つのだそうだ。それから、また打つ。三度打つ」", "「なんで、待つんです」", "「急いで次を打てば、前の音を追い越してしまう。響きが山の向こうまで届いて、ちゃんと帰っていくのを、見送ってやるのだと、和尚さまが言うておった」", "その日の夕暮れ、谷じゅうの人が、段丘の上に集まりました。年寄りも、子どもも、畑から鍬（くわ）をかついだまま来た男たちもいました。", "和尚さまが撞木（しゅもく）の綱を握り、ひとつ、鐘を打ちました。", "ごうん――。", "低い音が谷の底を這（は）い、川をわたり、向かいの山にぶつかって、またゆっくりと戻ってきます。誰も口をききませんでした。音はだんだん細くなり、細くなり、やがて夕焼けのなかに溶けていきました。", "おふさは、その響きのなかに、息子の声を聞いた気がしました。「おっかあ、ただいま」と、畑から帰ってくるときの、あの少しかすれた声を。", "ふたつめの鐘が鳴りました。また、みんなで待ちました。", "みっつめの鐘が鳴りました。", "最後の響きが消えたとき、おふさの頬には涙がつたっていました。けれどそれは、十年のあいだ流してきた涙とは、どこか違う、あたたかいものでした。", "となりを見ると、市兵衛さまも目を閉じて、静かに手を合わせていました。", "＊", "それから、四百年あまりの時が流れました。", "お寺は、いくたびも風雪にさらされ、あるときは火事にも遭いました。それでも谷の人びとは、そのたびに力を合わせ、お寺を建てなおしてきました。", "いまも、川を見下ろす段丘の上には、常源寺（じょうげんじ）が立っています。", "そして鐘を鳴らすとき、人びとはやっぱり、響きがすっかり消えるのを待ってから、次を打つのです。", "遠い昔、この谷を戦から守ろうとした殿さまと、帰らぬ息子を待ちつづけた母と、名もない多くの人びとの思いを、そっと見送るように。", "ごうん――。", "今日も、谷に鐘の音が響いています。"]}, {"id": "r02", "no": "二", "title": "卯月八日の子", "season": "第二話", "img": "p02.jpg", "text": ["第二話「卯月八日の子（うづきようかのこ）」が始まります。", "天文十九年の春、南相木（みなみあいき）の谷に、年老いたお坊さまがやって来ました。", "背は小さく、腰も少し曲がっています。けれど目は、春の川のように澄んでいました。", "「よう来てくださった、和尚さま」", "相木市兵衛さまが、深く頭を下げました。谷に新しく開くお寺のために、関東一円に名を知られたこの和尚さまをお招きしたのです。和尚さまは、このとき七十を越えていました。", "数日たったある晩のこと。和尚さまの泊まる庵（いおり）の戸を、若い母親がたたきました。腕の中で、赤子が火のついたように泣いています。", "「和尚さま、すみません。この子が、夜になると泣きやまなくて……。わたし、もう、どうしてやったらいいのか」", "母親の目は、真っ赤でした。", "和尚さまは赤子を受け取ると、ゆっくりと揺らしながら言いました。", "「よう泣く子じゃ。元気な声じゃのう」", "それから囲炉裏（いろり）の火を見つめて、ぽつりと話しはじめました。", "「わしもな、泣いて生まれてきた子じゃった。ただし、生まれたのは墓の中じゃ」", "母親は、息をのみました。", "「わしの母は、わしをお腹に宿したまま亡くなったのだそうな。村の者たちは、泣く泣く母を葬った。ところがその晩、墓のほうから赤子の泣き声がする。父が急いで掘り起こしてみると、冷たくなった母のかたわらで、生まれたばかりの赤子が、乳を求めて泣いておった。それが、わしじゃ」", "炉の火が、ぱちりと鳴りました。", "「生まれた日は、卯月の八日。お釈迦さまのお誕生日じゃ。父は、この子は仏さまからの授かりものだと言うて、わしを大事に育て、十三の年に鎌倉のお寺へ預けた」", "「……お母さまのお顔も、知らずに」", "「知らん。けれどな」", "和尚さまは、腕の中の赤子を見下ろしました。赤子はいつのまにか泣きやんで、和尚さまの衣の端を、小さな手でにぎっています。", "「わしは思うのじゃ。母は、命が尽きたあとも、わしを産んでくれた。声も出せず、乳もやれず、それでも、この世へわしを送り出してくれた。それほどの思いに守られて、わしはこの年まで生きてきた」", "和尚さまは、赤子をそっと母親の腕に返しました。", "「おまえさまは今、どうしたらいいかわからんと泣いておる。それでよい。わからんまま、抱いておればよい。その腕のぬくもりは、この子が忘れても、この子の命が覚えておる」", "母親の目から、涙がぽろぽろとこぼれました。腕の中で、赤子がすうすうと寝息を立てはじめました。", "その年、谷にお寺が開かれました。", "和尚さまはそれからも長く生き、九十六歳で亡くなったと伝えられています。", "毎年、卯月の八日が来ると、弟子たちは「和尚さまのお誕生日でございますね」とお祝いを言いました。", "すると和尚さまは、決まって笑って、こう答えたそうです。", "「いいや。今日は、わしの母が、いちばんがんばった日じゃ」"]}, {"id": "r03", "no": "三", "title": "鈴の音", "season": "第三話", "img": "p03.jpg", "text": ["第三話「鈴の音（すずのね）」が始まります。", "永禄四年の秋。", "相木の谷の館に、ひとりの若い女の人が帰ってきました。市兵衛さまのひとり娘、千代さまです。", "千代さまは、望月のお城の殿さまに嫁いでいました。けれどこの秋、川中島の戦で、その夫が討ち死にしたのです。", "館の縁側で、千代さまは何日も、ただ黙って山を見ていました。泣くこともできず、食べることもできずに。", "ある夕暮れ、市兵衛さまがとなりに腰をおろしました。手には、小さな包みを持っています。", "「千代。おまえが小さいころ、これを振って遊んでおったのを覚えておるか」", "包みの中から出てきたのは、古い鈴でした。お宮の祭りで、巫女さまが舞うときに鳴らす鈴です。", "「……覚えております。お祭りの日に、わたし、巫女さまのまねをして」", "「そうじゃ。おまえは、いつまでも鈴を離さなんだ」", "市兵衛さまは笑い、それから、ふっと遠くを見ました。", "「わしはな、千代。戦場で、たくさんの者を見送ってきた。味方も、敵もじゃ。敵にも、帰りを待つ母がおり、妻がおる。そう思うと、勝ち戦の夜でも、眠れんことがあった」", "千代さまは、はじめて父の顔をまっすぐに見ました。いつも強く、大きく見えた父の横顔に、深いしわが刻まれていました。", "「だから、わしは寺を建てた。けれど、寺を建てても、まだ足りん気がしておる。死んだ者のために祈る者が、もっともっと要るのじゃ」", "父は鈴を、千代さまの手のひらにのせました。", "「おまえの悲しみは、おまえだけのものじゃ。誰にも代わってはやれん。けれど、その悲しみを知っておるおまえだからこそ、届く祈りがあるかもしれん」", "千代さまは、鈴を握りしめました。冷たかった鈴が、手のなかで少しずつ、あたたかくなっていきました。", "その冬、千代さまは巫女になりました。やがて多くの巫女たちをたばねる巫女頭（みこがしら）となり、戦で命を落とした人びとのために、舞い、祈りつづけたと伝えられています。", "シャン、シャン、と鈴が鳴るたび、千代さまは心のなかで呼びかけました。", "（あなた。どうか、迷わずに）", "そして、名も知らぬ敵方の兵にも、同じように。", "（あなたも、どうか迷わずに。帰りを待つ人のところへ）", "春になって、千代さまは一度だけ、相木の谷に帰ってきました。父の建てたお寺の前で、千代さまは鈴を鳴らし、ゆっくりと舞いました。", "谷の人びとは手を止めて、その姿を見つめました。鈴の音は川をわたり、山へのぼり、空へと溶けていきました。", "本堂の前で、市兵衛さまは目を閉じていました。その頬がかすかにぬれているのを、千代さまだけが知っていました。"]}];
-/* 次の巻（最後の巻では null） */
-const NEXTVOL=null;
+const EPISODES = [{"id": "r00", "no": "はじめに", "title": "この朗読帖について", "img": null, "text": ["これから、「谷にひびく ― 常源寺ものがたり」をお届けします。", "信州の山あい、南相木（みなみあいき）の谷に、常源寺（じょうげんじ）というお寺があります。", "いまからおよそ四百七十年前、戦（いくさ）の絶えない時代に、この谷の殿さま、相木市兵衛さまが、亡くなった人びとの供養のために建てたお寺です。", "ここにお届けする三つのお話は、お寺の再建を記念して発刊された冊子『名刹 常源寺』をもとにつくりました。お話の中の場面や会話は、資料に残る言い伝えから思いえがいた創作です。", "第一話「鐘の音（ね）が消えるまで」。戦で息子を亡くした母と、谷の者を守るために戦をやめた殿さまが、はじめて鳴らされる鐘の音に耳をすませます。", "第二話「卯月八日の子（うづきようかのこ）」。お寺を開いた年老いた和尚さまが、夜泣きに困る若い母親に、墓の中で生まれた自分のことを語ります。", "第三話「鈴の音（すずのね）」。戦で夫を亡くした殿さまの娘・千代さまが、父から小さな鈴を受け取り、祈りの道を歩みはじめます。", "鐘の音、赤子の産声、そして鈴の音。", "遠い昔、この谷にひびいた音に、どうぞ、しばし耳をかたむけてください。"]}, {"id": "r01", "no": "第一話", "title": "鐘の音が消えるまで", "img": "p01.jpg", "text": ["第一話「鐘の音（ね）が消えるまで」が始まります。", "信州の山あい、南相木（みなみあいき）の谷に、秋の風が下りてくる季節でした。", "おふさは、川を見下ろす段丘の上に立って、新しいお寺の屋根を見上げていました。ついこのあいだまで、ただの草はらだったところです。いまは木の香りのする本堂が建ち、鐘楼には、まだ一度も鳴らされたことのない鐘が下がっています。", "「おふさ婆さま、寒くはないか」", "振り向くと、市兵衛さまが立っていました。この谷の殿さま、相木市兵衛さまです。戦（いくさ）に出れば泣く子もだまる、と噂される人ですが、おふさの前では、いつも少し照れたように笑うのでした。", "おふさの息子は、十年前の戦で帰らぬ人となりました。亡骸（なきがら）も戻らず、墓に納めたのは、息子が使っていた古い鎌一本だけです。", "「殿さま。なんで、お寺なんぞ建てなすった」", "おふさが聞くと、市兵衛さまは谷を見渡しました。", "「わしはな、婆さま。戦をやめたのだ。武田に頭を下げた。腰抜けと笑う者もおる。だが、これ以上、谷の者を死なせとうはなかった」", "風が、刈り取ったあとの田んぼを渡っていきます。", "「それでも、もう死んでしもうた者たちがおる。おまえの息子も、わしの家来も、その親も、その親の親もだ。その者たちが、迷わずに帰ってこられる場所がほしかった」", "おふさは、黙って鐘を見上げました。", "「この鐘はな」と市兵衛さまは言いました。「ひとつ打ったら、その響きがすっかり消えるまで、じっと待つのだそうだ。それから、また打つ。三度打つ」", "「なんで、待つんです」", "「急いで次を打てば、前の音を追い越してしまう。響きが山の向こうまで届いて、ちゃんと帰っていくのを、見送ってやるのだと、和尚さまが言うておった」", "その日の夕暮れ、谷じゅうの人が、段丘の上に集まりました。年寄りも、子どもも、畑から鍬（くわ）をかついだまま来た男たちもいました。", "和尚さまが撞木（しゅもく）の綱を握り、ひとつ、鐘を打ちました。", "ごうん――。", "低い音が谷の底を這（は）い、川をわたり、向かいの山にぶつかって、またゆっくりと戻ってきます。誰も口をききませんでした。音はだんだん細くなり、細くなり、やがて夕焼けのなかに溶けていきました。", "おふさは、その響きのなかに、息子の声を聞いた気がしました。「おっかあ、ただいま」と、畑から帰ってくるときの、あの少しかすれた声を。", "ふたつめの鐘が鳴りました。また、みんなで待ちました。", "みっつめの鐘が鳴りました。", "最後の響きが消えたとき、おふさの頬には涙がつたっていました。けれどそれは、十年のあいだ流してきた涙とは、どこか違う、あたたかいものでした。", "となりを見ると、市兵衛さまも目を閉じて、静かに手を合わせていました。", "＊", "それから、四百年あまりの時が流れました。", "お寺は、いくたびも風雪にさらされ、あるときは火事にも遭いました。それでも谷の人びとは、そのたびに力を合わせ、お寺を建てなおしてきました。", "いまも、川を見下ろす段丘の上には、常源寺（じょうげんじ）が立っています。", "そして鐘を鳴らすとき、人びとはやっぱり、響きがすっかり消えるのを待ってから、次を打つのです。", "遠い昔、この谷を戦から守ろうとした殿さまと、帰らぬ息子を待ちつづけた母と、名もない多くの人びとの思いを、そっと見送るように。", "ごうん――。", "今日も、谷に鐘の音が響いています。"]}, {"id": "r02", "no": "第二話", "title": "卯月八日の子", "img": "p02.jpg", "text": ["第二話「卯月八日の子（うづきようかのこ）」が始まります。", "天文十九年の春、南相木（みなみあいき）の谷に、年老いたお坊さまがやって来ました。", "背は小さく、腰も少し曲がっています。けれど目は、春の川のように澄んでいました。", "「よう来てくださった、和尚さま」", "相木市兵衛さまが、深く頭を下げました。谷に新しく開くお寺のために、関東一円に名を知られたこの和尚さまをお招きしたのです。和尚さまは、このとき七十を越えていました。", "数日たったある晩のこと。和尚さまの泊まる庵（いおり）の戸を、若い母親がたたきました。腕の中で、赤子が火のついたように泣いています。", "「和尚さま、すみません。この子が、夜になると泣きやまなくて……。わたし、もう、どうしてやったらいいのか」", "母親の目は、真っ赤でした。", "和尚さまは赤子を受け取ると、ゆっくりと揺らしながら言いました。", "「よう泣く子じゃ。元気な声じゃのう」", "それから囲炉裏（いろり）の火を見つめて、ぽつりと話しはじめました。", "「わしもな、泣いて生まれてきた子じゃった。ただし、生まれたのは墓の中じゃ」", "母親は、息をのみました。", "「わしの母は、わしをお腹に宿したまま亡くなったのだそうな。村の者たちは、泣く泣く母を葬った。ところがその晩、墓のほうから赤子の泣き声がする。父が急いで掘り起こしてみると、冷たくなった母のかたわらで、生まれたばかりの赤子が、乳を求めて泣いておった。それが、わしじゃ」", "炉の火が、ぱちりと鳴りました。", "「生まれた日は、卯月の八日。お釈迦さまのお誕生日じゃ。父は、この子は仏さまからの授かりものだと言うて、わしを大事に育て、十三の年に鎌倉のお寺へ預けた」", "「……お母さまのお顔も、知らずに」", "「知らん。けれどな」", "和尚さまは、腕の中の赤子を見下ろしました。赤子はいつのまにか泣きやんで、和尚さまの衣の端を、小さな手でにぎっています。", "「わしは思うのじゃ。母は、命が尽きたあとも、わしを産んでくれた。声も出せず、乳もやれず、それでも、この世へわしを送り出してくれた。それほどの思いに守られて、わしはこの年まで生きてきた」", "和尚さまは、赤子をそっと母親の腕に返しました。", "「おまえさまは今、どうしたらいいかわからんと泣いておる。それでよい。わからんまま、抱いておればよい。その腕のぬくもりは、この子が忘れても、この子の命が覚えておる」", "母親の目から、涙がぽろぽろとこぼれました。腕の中で、赤子がすうすうと寝息を立てはじめました。", "その年、谷にお寺が開かれました。", "和尚さまはそれからも長く生き、九十六歳で亡くなったと伝えられています。", "毎年、卯月の八日が来ると、弟子たちは「和尚さまのお誕生日でございますね」とお祝いを言いました。", "すると和尚さまは、決まって笑って、こう答えたそうです。", "「いいや。今日は、わしの母が、いちばんがんばった日じゃ」"]}, {"id": "r03", "no": "第三話", "title": "鈴の音", "img": "p03.jpg", "text": ["第三話「鈴の音（すずのね）」が始まります。", "永禄四年の秋。", "相木の谷の館に、ひとりの若い女の人が帰ってきました。市兵衛さまのひとり娘、千代さまです。", "千代さまは、望月のお城の殿さまに嫁いでいました。けれどこの秋、川中島の戦で、その夫が討ち死にしたのです。", "館の縁側で、千代さまは何日も、ただ黙って山を見ていました。泣くこともできず、食べることもできずに。", "ある夕暮れ、市兵衛さまがとなりに腰をおろしました。手には、小さな包みを持っています。", "「千代。おまえが小さいころ、これを振って遊んでおったのを覚えておるか」", "包みの中から出てきたのは、古い鈴でした。お宮の祭りで、巫女さまが舞うときに鳴らす鈴です。", "「……覚えております。お祭りの日に、わたし、巫女さまのまねをして」", "「そうじゃ。おまえは、いつまでも鈴を離さなんだ」", "市兵衛さまは笑い、それから、ふっと遠くを見ました。", "「わしはな、千代。戦場で、たくさんの者を見送ってきた。味方も、敵もじゃ。敵にも、帰りを待つ母がおり、妻がおる。そう思うと、勝ち戦の夜でも、眠れんことがあった」", "千代さまは、はじめて父の顔をまっすぐに見ました。いつも強く、大きく見えた父の横顔に、深いしわが刻まれていました。", "「だから、わしは寺を建てた。けれど、寺を建てても、まだ足りん気がしておる。死んだ者のために祈る者が、もっともっと要るのじゃ」", "父は鈴を、千代さまの手のひらにのせました。", "「おまえの悲しみは、おまえだけのものじゃ。誰にも代わってはやれん。けれど、その悲しみを知っておるおまえだからこそ、届く祈りがあるかもしれん」", "千代さまは、鈴を握りしめました。冷たかった鈴が、手のなかで少しずつ、あたたかくなっていきました。", "その冬、千代さまは巫女になりました。やがて多くの巫女たちをたばねる巫女頭（みこがしら）となり、戦で命を落とした人びとのために、舞い、祈りつづけたと伝えられています。", "シャン、シャン、と鈴が鳴るたび、千代さまは心のなかで呼びかけました。", "（あなた。どうか、迷わずに）", "そして、名も知らぬ敵方の兵にも、同じように。", "（あなたも、どうか迷わずに。帰りを待つ人のところへ）", "春になって、千代さまは一度だけ、相木の谷に帰ってきました。父の建てたお寺の前で、千代さまは鈴を鳴らし、ゆっくりと舞いました。", "谷の人びとは手を止めて、その姿を見つめました。鈴の音は川をわたり、山へのぼり、空へと溶けていきました。", "本堂の前で、市兵衛さまは目を閉じていました。その頬がかすかにぬれているのを、千代さまだけが知っていました。"]}];
 
-const $=id=>document.getElementById(id);
-const audio=$("audio");
-const state={cur:null,view:null,urls:{},src:{},rate:1,cont:true,fs:19,follow:true};
-const RATES=[0.8,1,1.25];
-const KEY="tani-ni-hibiku";
-try{const s=JSON.parse(localStorage.getItem(KEY+"-prefs")||"{}");state.rate=s.rate||1;state.fs=s.fs||19;if(s.follow===false)state.follow=false;}catch(e){}
-function savePrefs(){try{localStorage.setItem(KEY+"-prefs",JSON.stringify({rate:state.rate,fs:state.fs,follow:state.follow}))}catch(e){}}
+/* 本文：（よみがな）をふりがなにする */
+const SPECIAL=[["卯月八日の子（うづきようかのこ）","卯月八日の子","うづきようかのこ"],["鈴の音（すずのね）","鈴の音","すずのね"]];
+function esc(s){return s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+function ruby(s){
+  s=esc(s);
+  SPECIAL.forEach(([a,b,r])=>{s=s.split(a).join("<ruby>"+b+"<rt>"+r+"</rt></ruby>");});
+  return s.replace(/([一-龥々]+)（([ぁ-ゖー]+)）/g,"<ruby>$1<rt>$2</rt></ruby>");
+}
+function toHtml(text){
+  return text.map(p=>{
+    if(p==="＊")return '<p class="sep">＊</p>';
+    return '<p'+(/^[「（]/.test(p)?' class="q"':'')+'>'+ruby(p)+'</p>';
+  }).join("");
+}
 
-/* 読んでいるところ：文の長さと間から、おおよその位置を割り出す */
-function splitSent(p){const out=[];let cur="";for(let i=0;i<p.length;i++){cur+=p[i];if(/[。！？]/.test(p[i])){while(i+1<p.length&&/[」）』]/.test(p[i+1]))cur+=p[++i];out.push(cur);cur="";}}if(cur)out.push(cur);return out;}
-function weight(s){
-  if(s==="＊")return 10;
-  const t=s.replace(/[一-龥々]+（([ぁ-ゖー]+)）/g,"$1");let w=0;
-  for(const c of t){if(/[。！？]/.test(c))w+=3;else if(c==="、")w+=1.5;else if(c==="―")w+=2;else if(/[「」『』（）\s]/.test(c))w+=0;else w+=1;}
-  return w;
-}
-const PLAN={};
-function plan(w){
-  if(PLAN[w.id])return PLAN[w.id];const segs=[];let tot=0;
-  w.text.forEach((p,pi)=>{const ss=p==="＊"?[p]:splitSent(p);ss.forEach((s,si)=>{const wt=weight(s)+(si===ss.length-1?4:0);segs.push({p:pi,s,t0:tot,wt});tot+=wt;});});
-  segs.forEach(g=>{g.a=g.t0/tot;g.b=(g.t0+g.wt)/tot;});return PLAN[w.id]=segs;
-}
-let nowIdx=-1,userScrollAt=0;
-function buildBody(w){
-  const body=$("d-body");
-  if(body.dataset.id!==w.id){
-    body.textContent="";body.dataset.id=w.id;nowIdx=-1;let pe=null,pi=-1;
-    plan(w).forEach((g,k)=>{
-      if(g.p!==pi){pi=g.p;const p=w.text[pi];pe=document.createElement("p");if(p==="＊")pe.className="sep";else if(/^[「（]/.test(p))pe.className="dlg";body.appendChild(pe);}
-      const sp=document.createElement("span");sp.className="s";sp.dataset.k=k;sp.textContent=g.s;pe.appendChild(sp);
-    });
+const audio=document.getElementById('audio');
+const list=document.getElementById('list');
+const texts=document.getElementById('texts');
+const playBtn=document.getElementById('play');
+const seek=document.getElementById('seek');
+const timeEl=document.getElementById('time');
+const nowttl=document.getElementById('nowttl');
+const msg=document.getElementById('msg');
+const urls={};
+let cur=-1, cont=true;
+
+EPISODES.forEach((ep,i)=>{
+  const li=document.createElement('li');
+  li.innerHTML=`<span class="no">${ep.no}</span><span class="ttl">${ep.title}</span><span class="mark">♪ 再生中</span>`;
+  li.onclick=()=>{ load(i,true); };
+  list.appendChild(li);
+
+  const art=document.createElement('article');
+  art.id='ep'+i;
+  art.innerHTML=(ep.img?`<img class="epimg" src="${ep.img}" alt="" onerror="if(!this.dataset.f){this.dataset.f=1;this.src='images/${ep.img}'}">`:'')
+    +`<h2>${ep.no}　${ep.title}</h2><button class="readbtn">▶ この話を聞く</button>`+toHtml(ep.text);
+  art.querySelector('.readbtn').onclick=()=>{ load(i,true); };
+  texts.appendChild(art);
+});
+
+/* 音声のありか：リポジトリのいちばん上か audio フォルダ。なければ、この端末に入れておいたMP3 */
+function idbGet(k){return new Promise(res=>{try{const r=indexedDB.open("tani-ni-hibiku",1);
+  r.onupgradeneeded=()=>r.result.createObjectStore("audio");
+  r.onsuccess=()=>{try{const q=r.result.transaction("audio").objectStore("audio").get(k);q.onsuccess=()=>res(q.result);q.onerror=()=>res(null);}catch(e){res(null)}};
+  r.onerror=()=>res(null);}catch(e){res(null)}});}
+async function findAudio(ep){
+  if(urls[ep.id]!==undefined)return urls[ep.id];
+  for(const u of [ep.id+".mp3","audio/"+ep.id+".mp3",ep.id+".mp3.mp3","../audio/"+ep.id+".mp3","../"+ep.id+".mp3.mp3","../audio/"+ep.id+".mp3.mp3"]){
+    try{const r=await fetch(u,{method:"HEAD",cache:"no-store"});if(r.ok)return urls[ep.id]=u;}catch(e){}
   }
-  const on=state.cur===w.id&&!!state.urls[w.id];
-  body.classList.toggle("sync",on);$("d-sync-note").hidden=!on;
-}
-function curSeg(){
-  const w=WORKS.find(x=>x.id===state.cur),d=audio.duration;if(!w||!d||!isFinite(d))return null;
-  const segs=plan(w),f=audio.currentTime/d;let k=segs.findIndex(g=>f<g.b);if(k<0)k=segs.length-1;return {w,k,g:segs[k]};
-}
-function follow(sp,center){
-  const r=sp.getBoundingClientRect();
-  const top=$("d-cover").getBoundingClientRect().bottom+12,bot=$("player").getBoundingClientRect().top-12;
-  if(!center&&r.top>=top&&r.bottom<=bot)return;
-  window.scrollBy({top:r.top+r.height/2-(top+bot)/2,behavior:"smooth"});
-}
-function markNow(force){
-  const c=curSeg(),pn=$("p-now");
-  if(!c){pn.hidden=true;return;}
-  pn.hidden=false;if(pn.textContent!==c.g.s)pn.textContent=c.g.s;
-  const body=$("d-body");
-  if(state.view!==c.w.id||body.dataset.id!==c.w.id){const o=body.querySelector(".s.now");if(o)o.classList.remove("now");nowIdx=-1;return;}
-  if(!force&&c.k===nowIdx)return;
-  const old=body.querySelector(".s.now");if(old)old.classList.remove("now");
-  const sp=body.querySelector('.s[data-k="'+c.k+'"]');if(!sp)return;sp.classList.add("now");
-  nowIdx=c.k;
-  if(state.follow&&!audio.paused&&Date.now()-userScrollAt>5000)follow(sp,false);
-}
-window.addEventListener("touchmove",()=>{userScrollAt=Date.now()},{passive:true});
-window.addEventListener("wheel",()=>{userScrollAt=Date.now()},{passive:true});
-
-/* この端末への保存（IndexedDB） */
-let dbp=null;
-function idb(){if(dbp)return dbp;dbp=new Promise((res,rej)=>{try{const r=indexedDB.open(KEY,1);r.onupgradeneeded=()=>r.result.createObjectStore("audio");r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);}catch(e){rej(e)}});return dbp;}
-async function idbOp(mode,fn){const d=await idb();return new Promise((res,rej)=>{const tx=d.transaction("audio",mode);const rq=fn(tx.objectStore("audio"));tx.oncomplete=()=>res(rq&&rq.result);tx.onerror=()=>rej(tx.error);});}
-const idbGet=k=>idbOp("readonly",s=>s.get(k));
-const idbPut=(k,v)=>idbOp("readwrite",s=>s.put(v,k));
-const idbDel=k=>idbOp("readwrite",s=>s.delete(k));
-
-/* 音声：リポジトリのいちばん上（../r01.mp3）か audio フォルダを探す。なければ端末に入れたMP3 */
-async function probe(w){
-  for(const u of [w.id+".mp3","audio/"+w.id+".mp3",w.id+".mp3.mp3","../audio/"+w.id+".mp3","../"+w.id+".mp3.mp3","../audio/"+w.id+".mp3.mp3"]){
-    try{const r=await fetch(u,{method:"HEAD",cache:"no-store"});if(r.ok){state.urls[w.id]=u;state.src[w.id]="page";return;}}catch(e){}
-  }
-  try{const b=await idbGet(w.id);if(b){state.urls[w.id]=URL.createObjectURL(b);state.src[w.id]="device";}}catch(e){}
+  const b=await idbGet(ep.id);
+  return urls[ep.id]=b?URL.createObjectURL(b):null;
 }
 
-function minutes(w){return Math.max(1,Math.round(w.text.join("").length/280));}
-function fmt(t){if(!isFinite(t))return"0:00";t=Math.floor(t);return Math.floor(t/60)+":"+String(t%60).padStart(2,"0");}
-function toast(msg){const t=$("toast");t.textContent=msg;t.hidden=false;clearTimeout(toast.h);toast.h=setTimeout(()=>t.hidden=true,2600);}
+function fmt(t){ if(!isFinite(t)) return '0:00'; const m=Math.floor(t/60), s=Math.floor(t%60); return m+':'+String(s).padStart(2,'0'); }
 
-function renderList(){
-  const ul=$("list");ul.textContent="";
-  WORKS.forEach(w=>{
-    const li=document.createElement("li");
-    const b=document.createElement("button");b.type="button";b.className="item"+(state.cur===w.id&&!audio.paused?" playing":"");
-    b.innerHTML='<span class="no"></span><span style="min-width:0"><span class="t"></span><span class="meta"><span class="s"></span><span class="m"></span></span></span><span class="chip"></span>';
-    b.querySelector(".no").textContent=w.no;
-    b.querySelector(".t").textContent=w.title;
-    b.querySelector(".s").textContent=w.season;
-    b.querySelector(".m").textContent="約"+minutes(w)+"分";
-    const c=b.querySelector(".chip");const has=!!state.urls[w.id];c.textContent=has?"音声あり":"音声なし";if(has)c.classList.add("on");
-    b.onclick=()=>{location.hash=w.id};
-    li.appendChild(b);ul.appendChild(li);
-  });
-  const n=WORKS.filter(w=>state.urls[w.id]).length;
-  $("stats").textContent="音声が入っている朗読　"+n+" / "+WORKS.length+" 本";
+function mark(){
+  [...list.children].forEach((li,i)=>li.classList.toggle('now',i===cur));
+  [...texts.children].forEach((a,i)=>a.classList.toggle('now',i===cur));
 }
 
-function renderDetail(){
-  const w=WORKS.find(x=>x.id===state.view);if(!w)return;
-  $("d-season").textContent=w.season;
-  $("d-title").textContent=w.title;
-  $("d-len").textContent="本文 約"+w.text.join("").length+"字・朗読 約"+minutes(w)+"分";
-  buildBody(w);
-  $("follow").setAttribute("aria-pressed",state.follow);
-  const has=!!state.urls[w.id],playing=state.cur===w.id&&!audio.paused;
-  $("d-play").textContent=has?(playing?"一時停止":"この朗読を聞く"):"音声はまだありません";
-  $("d-play").disabled=!has;
-  $("d-pick-wrap").hidden=state.src[w.id]==="page";
-  $("d-pick-label").textContent=has?"MP3を入れかえる":"MP3を入れる";
-  $("d-del").hidden=state.src[w.id]!=="device";
-  $("d-note").textContent=state.src[w.id]==="page"?"この音声はページに組みこまれています。だれが開いても聞けます。"
-    :has?"この音声はこの端末だけに保存されています。"
-    :"スマートフォンに入っているMP3を選ぶと、この端末で聞けるようになります。";
-  document.documentElement.style.setProperty("--fs",state.fs+"px");
-  const i=WORKS.findIndex(x=>x.id===state.view),nx=WORKS[i+1];
-  $("next2").hidden=!nx;if(nx)$("next2").textContent="次へ　"+nx.title+" ›";
-  const nv=$("nextvol2");nv.hidden=!!nx||!NEXTVOL;
-  if(!nx&&NEXTVOL){nv.href=NEXTVOL.href;nv.textContent="次の巻へ　"+NEXTVOL.label+" ›";}
-  markNow(false);
+/* はじめから最後まで続けて再生する */
+async function load(i, autoplay){
+  if(i<0 || i>=EPISODES.length) return;
+  cur=i; msg.textContent='';
+  const ep=EPISODES[i];
+  nowttl.textContent=ep.no+'　'+ep.title;
+  document.getElementById('ep'+i).scrollIntoView({behavior:'smooth', block:'start'});
+  mark();
+  const u=await findAudio(ep);
+  if(cur!==i) return;
+  if(!u){ audio.removeAttribute('src'); playBtn.textContent='▶'; msg.textContent='この話の音声はまだ入っていません（'+ep.id+'.mp3）'; return; }
+  audio.src=u;
+  if(autoplay){ audio.play().catch(()=>{}); }
 }
 
-function route(){
-  const w=WORKS.find(x=>x.id===location.hash.slice(1));
-  if(w){
-    const changed=state.view!==w.id;state.view=w.id;$("home").hidden=true;$("detail").hidden=false;
-    if(changed){delete $("d-img").dataset.f;$("d-img").src=w.img;$("d-confirm").hidden=true;window.scrollTo(0,0);}
-    renderDetail();sizeDetailCover();
-  }else{state.view=null;$("home").hidden=false;$("detail").hidden=true;renderList();}
-}
+document.getElementById('playall').onclick=()=>{ load(0,true); };
+playBtn.onclick=()=>{
+  if(cur<0){ load(0,true); return; }
+  if(audio.paused) audio.play().catch(()=>{}); else audio.pause();
+};
+document.getElementById('prev').onclick=()=>{ load(Math.max(0,cur-1),true); };
+document.getElementById('next').onclick=()=>{ if(cur<EPISODES.length-1) load(cur+1,true); };
+document.getElementById('cont').onclick=function(){
+  cont=!cont; this.setAttribute('aria-pressed',cont);
+  msg.textContent=cont?'終わったら次の話へ進みます':'一話ずつ止まります';
+};
 
-/* 再生 */
-function load(id,autoplay){
-  const w=WORKS.find(x=>x.id===id);if(!w||!state.urls[id])return false;
-  if(state.cur!==id){state.cur=id;audio.src=state.urls[id];}
-  audio.playbackRate=state.rate;
-  $("p-title").textContent=(w.intro?"":w.season+"　")+w.title;
-  if(autoplay)audio.play().catch(()=>toast("再生できませんでした。もう一度押してください"));
-  return true;
-}
-function step(dir){
-  if(!state.cur){const f=WORKS.find(w=>state.urls[w.id]);if(f)load(f.id,true);else toast("音声が入っている朗読がありません");return;}
-  let i=WORKS.findIndex(w=>w.id===state.cur);
-  for(let k=0;k<WORKS.length;k++){i+=dir;if(i<0||i>=WORKS.length)break;if(state.urls[WORKS[i].id]){load(WORKS[i].id,true);if(state.view)location.hash=WORKS[i].id;return;}}
-  if(dir>0)toast("これで最後の朗読です");
-  else toast("これが最初の朗読です");
-}
-const PLAY='<path d="M8 5v14l11-7z"/>',PAUSE='<path d="M6 5h4v14H6zM14 5h4v14h-4z"/>';
-function sync(){
-  $("pp-ic").innerHTML=audio.paused?PLAY:PAUSE;$("pp").setAttribute("aria-label",audio.paused?"再生":"一時停止");
-  if(state.view)renderDetail();else renderList();
-}
-audio.addEventListener("play",sync);audio.addEventListener("pause",sync);
-let seeking=false;
-audio.addEventListener("timeupdate",()=>{const d=audio.duration||0;if(!seeking)$("seek").value=d?audio.currentTime/d*100:0;$("time").textContent=fmt(audio.currentTime)+" / "+fmt(d);markNow(false);});
-audio.addEventListener("loadedmetadata",()=>{$("time").textContent="0:00 / "+fmt(audio.duration);markNow(true);});
-audio.addEventListener("seeked",()=>{userScrollAt=0;markNow(true);});
-audio.addEventListener("ended",()=>{
-  if(SLEEP[sleepIdx]===-1){resetSleep();toast("おやすみなさい");sync();return;}
-  if(state.cont)step(1);else sync();});
+audio.addEventListener('play', ()=>{ playBtn.textContent='⏸'; });
+audio.addEventListener('pause', ()=>{ playBtn.textContent='▶'; });
+audio.addEventListener('timeupdate', ()=>{
+  if(audio.duration){ seek.value=audio.currentTime/audio.duration*100; }
+  timeEl.textContent=fmt(audio.currentTime)+' / '+fmt(audio.duration);
+});
+seek.addEventListener('input', ()=>{ if(audio.duration) audio.currentTime=seek.value/100*audio.duration; });
+audio.addEventListener('ended', ()=>{
+  if(SLEEP[sleepIdx]===-1){ resetSleep(); playBtn.textContent='▶'; msg.textContent='おやすみなさい'; return; }
+  if(cont && cur<EPISODES.length-1){ load(cur+1,true); }
+  else if(cur>=EPISODES.length-1){ playBtn.textContent='▶'; nowttl.textContent='『谷にひびく』おわりまで聞きました'; }
+});
 
 /* おやすみタイマー */
 const SLEEP=[0,15,20,30,-1];
-let sleepIdx=0,deadline=null,fading=null;
-function resetSleep(){sleepIdx=0;deadline=null;showSleep();}
+let sleepIdx=0, deadline=null, fading=null;
+const sleepBtn=document.getElementById('sleep');
+function resetSleep(){ sleepIdx=0; deadline=null; showSleep(); }
 function showSleep(){
-  const b=$("sleep"),m=SLEEP[sleepIdx];b.setAttribute("aria-pressed",m!==0);
-  b.textContent=m===0?"☾ タイマー":m===-1?"☾ この話まで":"☾ 残り"+fmt(Math.max(0,deadline-Date.now())/1000);
+  const m=SLEEP[sleepIdx]; sleepBtn.setAttribute('aria-pressed',m!==0);
+  sleepBtn.textContent=m===0?'☾ タイマー':m===-1?'☾ この話まで':'☾ 残り'+fmt(Math.max(0,deadline-Date.now())/1000);
 }
 function checkSleep(){
-  if(!deadline||fading)return;
+  if(!deadline||fading) return;
   if(Date.now()>=deadline){
-    if(audio.paused){resetSleep();return;}
-    let v=1;fading=setInterval(()=>{v-=0.05;try{audio.volume=Math.max(0,v)}catch(e){}
-      if(v<=0){clearInterval(fading);fading=null;audio.pause();try{audio.volume=1}catch(e){}resetSleep();toast("おやすみなさい");}},500);
+    if(audio.paused){ resetSleep(); return; }
+    let v=1; fading=setInterval(()=>{ v-=0.05; try{audio.volume=Math.max(0,v)}catch(e){}
+      if(v<=0){ clearInterval(fading); fading=null; audio.pause(); try{audio.volume=1}catch(e){} resetSleep(); msg.textContent='おやすみなさい'; } },500);
   }
 }
-$("sleep").onclick=()=>{
-  if(fading){clearInterval(fading);fading=null;try{audio.volume=1}catch(e){}}
-  sleepIdx=(sleepIdx+1)%SLEEP.length;const m=SLEEP[sleepIdx];
-  deadline=m>0?Date.now()+m*60000:null;showSleep();
-  toast(m===0?"タイマーを切りました":m===-1?"いまの朗読が終わったら止めます":m+"分後にゆっくり止めます");
+sleepBtn.onclick=()=>{
+  if(fading){ clearInterval(fading); fading=null; try{audio.volume=1}catch(e){} }
+  sleepIdx=(sleepIdx+1)%SLEEP.length; const m=SLEEP[sleepIdx];
+  deadline=m>0?Date.now()+m*60000:null; showSleep();
+  msg.textContent=m===0?'タイマーを切りました':m===-1?'いまの話が終わったら止めます':m+'分後にゆっくり止めます';
 };
-setInterval(()=>{if(deadline)showSleep();checkSleep();},1000);
-
-$("seek").addEventListener("input",()=>{seeking=true;const d=audio.duration||0;$("time").textContent=fmt($("seek").value/100*d)+" / "+fmt(d);});
-$("seek").addEventListener("change",()=>{const d=audio.duration||0;if(d)audio.currentTime=$("seek").value/100*d;seeking=false;});
-$("pp").onclick=()=>{if(!state.cur){step(1);return;}audio.paused?audio.play().catch(()=>{}):audio.pause();};
-$("rew").onclick=()=>{audio.currentTime=Math.max(0,audio.currentTime-15)};
-$("fwd").onclick=()=>{if(audio.duration)audio.currentTime=Math.min(audio.duration-0.5,audio.currentTime+15)};
-$("prev").onclick=()=>step(-1);$("next").onclick=()=>step(1);
-function showRate(){$("rate").textContent=state.rate.toFixed(state.rate===1.25?2:1)+"倍";$("cont").setAttribute("aria-pressed",state.cont);}
-$("rate").onclick=()=>{state.rate=RATES[(RATES.indexOf(state.rate)+1)%RATES.length];audio.playbackRate=state.rate;showRate();savePrefs();};
-$("cont").onclick=()=>{state.cont=!state.cont;showRate();toast(state.cont?"終わったら次の朗読へ進みます":"一話ずつ止まります");};
-
-/* 本文ページの操作 */
-$("back").onclick=$("back2").onclick=()=>{location.hash="";};
-$("next2").onclick=()=>{const i=WORKS.findIndex(x=>x.id===state.view);if(WORKS[i+1])location.hash=WORKS[i+1].id;};
-$("d-play").onclick=()=>{const id=state.view;if(state.cur===id&&!audio.paused){audio.pause();return;}load(id,true);};
-$("d-pick").addEventListener("change",async e=>{
-  const f=e.target.files[0];e.target.value="";if(!f)return;const id=state.view;
-  if(!/audio|mpeg/.test(f.type)&&!/\.mp3$/i.test(f.name)){toast("音声ファイル（MP3）を選んでください");return;}
-  try{await idbPut(id,f);}catch(err){toast("この端末には保存できませんでした。このまま一時的に再生できます");}
-  if(state.urls[id]&&state.src[id]==="device")URL.revokeObjectURL(state.urls[id]);
-  state.urls[id]=URL.createObjectURL(f);state.src[id]="device";if(state.cur===id)state.cur=null;
-  renderDetail();toast("「"+WORKS.find(w=>w.id===id).title+"」に音声を入れました");
-});
-$("d-del").onclick=()=>{$("d-confirm").hidden=false;};
-$("d-del-no").onclick=()=>{$("d-confirm").hidden=true;};
-$("d-del-yes").onclick=async()=>{
-  const id=state.view;try{await idbDel(id)}catch(e){}
-  if(state.cur===id){audio.pause();audio.removeAttribute("src");state.cur=null;$("p-title").textContent="再生する朗読を選んでください";}
-  URL.revokeObjectURL(state.urls[id]);delete state.urls[id];delete state.src[id];$("d-confirm").hidden=true;renderDetail();toast("音声を外しました");
-};
-$("follow").onclick=()=>{state.follow=!state.follow;savePrefs();renderDetail();toast(state.follow?"読んでいるところに合わせて本文が動きます":"本文は自動では動きません");};
-$("d-body").addEventListener("click",e=>{
-  const sp=e.target.closest(".s");if(!sp||state.cur!==state.view)return;
-  const d=audio.duration;if(!d||!isFinite(d))return;
-  const g=plan(WORKS.find(x=>x.id===state.view))[+sp.dataset.k];
-  audio.currentTime=g.a*d+0.01;userScrollAt=0;if(audio.paused)audio.play().catch(()=>{});
-});
-$("p-now").onclick=()=>{
-  if(!state.cur)return;userScrollAt=0;
-  if(state.view!==state.cur)location.hash=state.cur;
-  setTimeout(()=>{markNow(true);const sp=$("d-body").querySelector(".s.now");if(sp)follow(sp,true);},150);
-};
-$("fs-up").onclick=()=>{state.fs=Math.min(26,state.fs+2);renderDetail();savePrefs();};
-$("fs-down").onclick=()=>{state.fs=Math.max(15,state.fs-2);renderDetail();savePrefs();};
-
-/* 本文ページの絵：最初は大きく、読み進めると上に小さく残る */
-function sizeDetailCover(){
-  if($("detail").hidden)return;
-  const box=$("d-cover"),w=box.parentElement.clientWidth;
-  const full=Math.min(w*16/9,window.innerHeight*0.7);
-  const min=Math.min(full,w*0.5);
-  const start=$("back").offsetTop+$("back").offsetHeight;
-  const h=Math.max(min,full-Math.max(0,window.scrollY-start));
-  box.style.height=h+"px";box.style.marginBottom=(full-h)+"px";
-}
-window.addEventListener("scroll",()=>requestAnimationFrame(sizeDetailCover),{passive:true});
-window.addEventListener("resize",sizeDetailCover);
-window.addEventListener("hashchange",route);
-showRate();route();
-Promise.all(WORKS.map(probe)).then(route);
+setInterval(()=>{ if(deadline) showSleep(); checkSleep(); },1000);
 </script>
-</body></html>
+</body>
+</html>
