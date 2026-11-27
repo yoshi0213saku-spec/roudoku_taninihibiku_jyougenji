@@ -20,7 +20,7 @@ html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--gothic);font-size:16px;line-height:1.7;
   padding-top:env(safe-area-inset-top,0px);
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
-  padding-bottom:calc(150px + env(safe-area-inset-bottom,0px))}
+  padding-bottom:calc(200px + env(safe-area-inset-bottom,0px))}
 [hidden]{display:none!important}
 img{max-width:100%}
 .wrap{max-width:640px;margin:0 auto}
@@ -95,7 +95,13 @@ header.top{padding-block:4px 18px;display:grid;gap:12px}
 .ic.big svg{width:28px;height:28px}
 .rate{border:1px solid var(--line);background:none;border-radius:8px;padding:6px;font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap;min-width:52px}
 .rate[aria-pressed="true"]{background:var(--ai-soft);color:var(--ai);border-color:transparent}
-.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(150px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:14px;z-index:30;max-width:calc(100% - 32px)}
+.body .s{border-radius:4px;transition:background-color .3s,box-shadow .3s}
+.body.sync .s{cursor:pointer}
+.body .s.now{background:var(--ai-soft);box-shadow:0 0 0 3px var(--ai-soft);-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.p-now{font-family:var(--mincho);font-size:14px;line-height:1.5;color:var(--ink);background:var(--ai-soft);border:0;border-radius:8px;padding:6px 10px;text-align:left;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;width:100%}
+.sizer .follow{width:auto;padding:0 10px}
+.sizer .follow[aria-pressed="true"]{background:var(--ai-soft);color:var(--ai);border-color:transparent}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(200px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:14px;z-index:30;max-width:calc(100% - 32px)}
 </style></head>
 <body>
 <div class="wrap">
@@ -135,7 +141,9 @@ header.top{padding-block:4px 18px;display:grid;gap:12px}
       <p class="note" id="d-note"></p>
       <div class="sizer">文字の大きさ
         <button type="button" id="fs-down" aria-label="文字を小さく">小</button>
-        <button type="button" id="fs-up" aria-label="文字を大きく">大</button></div>
+        <button type="button" id="fs-up" aria-label="文字を大きく">大</button>
+        <button type="button" id="follow" class="follow" aria-pressed="true">読んでいる所を追う</button></div>
+      <p class="note" id="d-sync-note" hidden>色のついた文が、いま読んでいるところです（おおよその位置）。文をタップすると、そこから聞けます。</p>
       <div class="body" id="d-body"></div>
       <div class="end-nav">
         <button class="btn" id="back2" type="button">‹ 目次にもどる</button>
@@ -152,6 +160,7 @@ header.top{padding-block:4px 18px;display:grid;gap:12px}
       <div class="p-title" id="p-title">再生する朗読を選んでください</div>
       <button class="rate" id="sleep" type="button" aria-label="おやすみタイマー">☾ タイマー</button>
     </div>
+    <button class="p-now" id="p-now" type="button" hidden aria-label="読んでいるところの本文を開く"></button>
     <div class="p-row">
       <input type="range" id="seek" min="0" max="100" value="0" step="0.1" aria-label="再生位置">
       <span class="time" id="time">0:00 / 0:00</span>
@@ -177,11 +186,63 @@ const NEXTVOL=null;
 
 const $=id=>document.getElementById(id);
 const audio=$("audio");
-const state={cur:null,view:null,urls:{},src:{},rate:1,cont:true,fs:19};
+const state={cur:null,view:null,urls:{},src:{},rate:1,cont:true,fs:19,follow:true};
 const RATES=[0.8,1,1.25];
 const KEY="tani-ni-hibiku";
-try{const s=JSON.parse(localStorage.getItem(KEY+"-prefs")||"{}");state.rate=s.rate||1;state.fs=s.fs||19;}catch(e){}
-function savePrefs(){try{localStorage.setItem(KEY+"-prefs",JSON.stringify({rate:state.rate,fs:state.fs}))}catch(e){}}
+try{const s=JSON.parse(localStorage.getItem(KEY+"-prefs")||"{}");state.rate=s.rate||1;state.fs=s.fs||19;if(s.follow===false)state.follow=false;}catch(e){}
+function savePrefs(){try{localStorage.setItem(KEY+"-prefs",JSON.stringify({rate:state.rate,fs:state.fs,follow:state.follow}))}catch(e){}}
+
+/* 読んでいるところ：文の長さと間から、おおよその位置を割り出す */
+function splitSent(p){const out=[];let cur="";for(let i=0;i<p.length;i++){cur+=p[i];if(/[。！？]/.test(p[i])){while(i+1<p.length&&/[」）』]/.test(p[i+1]))cur+=p[++i];out.push(cur);cur="";}}if(cur)out.push(cur);return out;}
+function weight(s){
+  if(s==="＊")return 10;
+  const t=s.replace(/[一-龥々]+（([ぁ-ゖー]+)）/g,"$1");let w=0;
+  for(const c of t){if(/[。！？]/.test(c))w+=3;else if(c==="、")w+=1.5;else if(c==="―")w+=2;else if(/[「」『』（）\s]/.test(c))w+=0;else w+=1;}
+  return w;
+}
+const PLAN={};
+function plan(w){
+  if(PLAN[w.id])return PLAN[w.id];const segs=[];let tot=0;
+  w.text.forEach((p,pi)=>{const ss=p==="＊"?[p]:splitSent(p);ss.forEach((s,si)=>{const wt=weight(s)+(si===ss.length-1?4:0);segs.push({p:pi,s,t0:tot,wt});tot+=wt;});});
+  segs.forEach(g=>{g.a=g.t0/tot;g.b=(g.t0+g.wt)/tot;});return PLAN[w.id]=segs;
+}
+let nowIdx=-1,userScrollAt=0;
+function buildBody(w){
+  const body=$("d-body");
+  if(body.dataset.id!==w.id){
+    body.textContent="";body.dataset.id=w.id;nowIdx=-1;let pe=null,pi=-1;
+    plan(w).forEach((g,k)=>{
+      if(g.p!==pi){pi=g.p;const p=w.text[pi];pe=document.createElement("p");if(p==="＊")pe.className="sep";else if(/^[「（]/.test(p))pe.className="dlg";body.appendChild(pe);}
+      const sp=document.createElement("span");sp.className="s";sp.dataset.k=k;sp.textContent=g.s;pe.appendChild(sp);
+    });
+  }
+  const on=state.cur===w.id&&!!state.urls[w.id];
+  body.classList.toggle("sync",on);$("d-sync-note").hidden=!on;
+}
+function curSeg(){
+  const w=WORKS.find(x=>x.id===state.cur),d=audio.duration;if(!w||!d||!isFinite(d))return null;
+  const segs=plan(w),f=audio.currentTime/d;let k=segs.findIndex(g=>f<g.b);if(k<0)k=segs.length-1;return {w,k,g:segs[k]};
+}
+function follow(sp,center){
+  const r=sp.getBoundingClientRect();
+  const top=$("d-cover").getBoundingClientRect().bottom+12,bot=$("player").getBoundingClientRect().top-12;
+  if(!center&&r.top>=top&&r.bottom<=bot)return;
+  window.scrollBy({top:r.top+r.height/2-(top+bot)/2,behavior:"smooth"});
+}
+function markNow(force){
+  const c=curSeg(),pn=$("p-now");
+  if(!c){pn.hidden=true;return;}
+  pn.hidden=false;if(pn.textContent!==c.g.s)pn.textContent=c.g.s;
+  const body=$("d-body");
+  if(state.view!==c.w.id||body.dataset.id!==c.w.id){const o=body.querySelector(".s.now");if(o)o.classList.remove("now");nowIdx=-1;return;}
+  if(!force&&c.k===nowIdx)return;
+  const old=body.querySelector(".s.now");if(old)old.classList.remove("now");
+  const sp=body.querySelector('.s[data-k="'+c.k+'"]');if(!sp)return;sp.classList.add("now");
+  nowIdx=c.k;
+  if(state.follow&&!audio.paused&&Date.now()-userScrollAt>5000)follow(sp,false);
+}
+window.addEventListener("touchmove",()=>{userScrollAt=Date.now()},{passive:true});
+window.addEventListener("wheel",()=>{userScrollAt=Date.now()},{passive:true});
 
 /* この端末への保存（IndexedDB） */
 let dbp=null;
@@ -226,9 +287,8 @@ function renderDetail(){
   $("d-season").textContent=w.season;
   $("d-title").textContent=w.title;
   $("d-len").textContent="本文 約"+w.text.join("").length+"字・朗読 約"+minutes(w)+"分";
-  const body=$("d-body");body.textContent="";
-  w.text.forEach(p=>{const e=document.createElement("p");e.textContent=p;
-    if(p==="＊")e.className="sep";else if(/^[「（]/.test(p))e.className="dlg";body.appendChild(e)});
+  buildBody(w);
+  $("follow").setAttribute("aria-pressed",state.follow);
   const has=!!state.urls[w.id],playing=state.cur===w.id&&!audio.paused;
   $("d-play").textContent=has?(playing?"一時停止":"この朗読を聞く"):"音声はまだありません";
   $("d-play").disabled=!has;
@@ -243,6 +303,7 @@ function renderDetail(){
   $("next2").hidden=!nx;if(nx)$("next2").textContent="次へ　"+nx.title+" ›";
   const nv=$("nextvol2");nv.hidden=!!nx||!NEXTVOL;
   if(!nx&&NEXTVOL){nv.href=NEXTVOL.href;nv.textContent="次の巻へ　"+NEXTVOL.label+" ›";}
+  markNow(false);
 }
 
 function route(){
@@ -277,8 +338,9 @@ function sync(){
 }
 audio.addEventListener("play",sync);audio.addEventListener("pause",sync);
 let seeking=false;
-audio.addEventListener("timeupdate",()=>{const d=audio.duration||0;if(!seeking)$("seek").value=d?audio.currentTime/d*100:0;$("time").textContent=fmt(audio.currentTime)+" / "+fmt(d);});
-audio.addEventListener("loadedmetadata",()=>{$("time").textContent="0:00 / "+fmt(audio.duration)});
+audio.addEventListener("timeupdate",()=>{const d=audio.duration||0;if(!seeking)$("seek").value=d?audio.currentTime/d*100:0;$("time").textContent=fmt(audio.currentTime)+" / "+fmt(d);markNow(false);});
+audio.addEventListener("loadedmetadata",()=>{$("time").textContent="0:00 / "+fmt(audio.duration);markNow(true);});
+audio.addEventListener("seeked",()=>{userScrollAt=0;markNow(true);});
 audio.addEventListener("ended",()=>{
   if(SLEEP[sleepIdx]===-1){resetSleep();toast("おやすみなさい");sync();return;}
   if(state.cont)step(1);else sync();});
@@ -335,6 +397,18 @@ $("d-del-yes").onclick=async()=>{
   const id=state.view;try{await idbDel(id)}catch(e){}
   if(state.cur===id){audio.pause();audio.removeAttribute("src");state.cur=null;$("p-title").textContent="再生する朗読を選んでください";}
   URL.revokeObjectURL(state.urls[id]);delete state.urls[id];delete state.src[id];$("d-confirm").hidden=true;renderDetail();toast("音声を外しました");
+};
+$("follow").onclick=()=>{state.follow=!state.follow;savePrefs();renderDetail();toast(state.follow?"読んでいるところに合わせて本文が動きます":"本文は自動では動きません");};
+$("d-body").addEventListener("click",e=>{
+  const sp=e.target.closest(".s");if(!sp||state.cur!==state.view)return;
+  const d=audio.duration;if(!d||!isFinite(d))return;
+  const g=plan(WORKS.find(x=>x.id===state.view))[+sp.dataset.k];
+  audio.currentTime=g.a*d+0.01;userScrollAt=0;if(audio.paused)audio.play().catch(()=>{});
+});
+$("p-now").onclick=()=>{
+  if(!state.cur)return;userScrollAt=0;
+  if(state.view!==state.cur)location.hash=state.cur;
+  setTimeout(()=>{markNow(true);const sp=$("d-body").querySelector(".s.now");if(sp)follow(sp,true);},150);
 };
 $("fs-up").onclick=()=>{state.fs=Math.min(26,state.fs+2);renderDetail();savePrefs();};
 $("fs-down").onclick=()=>{state.fs=Math.max(15,state.fs-2);renderDetail();savePrefs();};
