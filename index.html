@@ -53,7 +53,6 @@
   .list .mark{font-size:13px; color:var(--gold); visibility:hidden}
   .list li.now .mark{visibility:visible}
   article{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:22px 20px; margin-bottom:20px; scroll-margin-top:12px; overflow:hidden}
-  .epimg{display:block; width:calc(100% + 40px); max-width:none; margin:-22px -20px 16px; aspect-ratio:16/10; object-fit:cover}
   article h2{font-size:20px; margin:0 0 12px; font-weight:600}
   article p{margin:0 0 1em; font-size:17px; text-indent:1em; line-height:2.2}
   article p.q{text-indent:0}
@@ -171,8 +170,7 @@ EPISODES.forEach((ep,i)=>{
 
   const art=document.createElement('article');
   art.id='ep'+i;
-  art.innerHTML=(ep.img?`<img class="epimg" src="${ep.img}" alt="" onerror="if(!this.dataset.f){this.dataset.f=1;this.src='images/${ep.img}'}">`:'')
-    +`<h2>${ep.no}　${ep.title}</h2><button class="readbtn">▶ この話を聞く</button>`+toHtml(ep.text);
+  art.innerHTML=`<h2>${ep.no}　${ep.title}</h2><button class="readbtn">▶ この話を聞く</button>`+toHtml(ep.text);
   art.querySelector('.readbtn').onclick=()=>{ load(i,true); };
   texts.appendChild(art);
 });
@@ -201,7 +199,7 @@ function mark(){
 /* はじめから最後まで続けて再生する */
 async function load(i, autoplay){
   if(i<0 || i>=EPISODES.length) return;
-  cur=i; msg.textContent='';
+  cur=i; followP=-1; userScrollAt=0; msg.textContent='';
   const ep=EPISODES[i];
   nowttl.textContent=ep.no+'　'+ep.title;
   document.getElementById('ep'+i).scrollIntoView({behavior:'smooth', block:'start'});
@@ -227,7 +225,24 @@ document.getElementById('cont').onclick=function(){
 
 audio.addEventListener('play', ()=>{ playBtn.textContent='⏸'; });
 audio.addEventListener('pause', ()=>{ playBtn.textContent='▶'; });
+/* 音声の進みに合わせて、いま読んでいるあたりの文章が画面に見えるようにする（色は付けない） */
+let followP=-1, userScrollAt=0;
+['touchstart','wheel'].forEach(t=>window.addEventListener(t,()=>{userScrollAt=Date.now();},{passive:true}));
+function follow(){
+  if(cur<0 || !audio.duration || audio.paused) return;
+  if(Date.now()-userScrollAt<8000) return;            /* 自分で動かしたあとは、しばらく追いかけない */
+  const ps=[...document.getElementById('ep'+cur).querySelectorAll('p')];
+  if(!ps.length) return;
+  const lens=ps.map(e=>e.textContent.length+6), total=lens.reduce((a,b)=>a+b,0);
+  let pos=audio.currentTime/audio.duration*total, k=0;
+  while(k<ps.length-1 && pos>lens[k]){ pos-=lens[k]; k++; }
+  if(k===followP) return;
+  followP=k;
+  const r=ps[k].getBoundingClientRect(), bottom=window.innerHeight-document.querySelector('.player').offsetHeight;
+  if(r.top<60 || r.bottom>bottom-40){ window.scrollBy({top:r.top-window.innerHeight*0.3, behavior:'smooth'}); }
+}
 audio.addEventListener('timeupdate', ()=>{
+  follow();
   if(audio.duration){ seek.value=audio.currentTime/audio.duration*100; }
   timeEl.textContent=fmt(audio.currentTime)+' / '+fmt(audio.duration);
 });
